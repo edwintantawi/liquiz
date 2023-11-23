@@ -8,10 +8,17 @@
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:tailwindcss/recommended",
     "prettier"
   ],
   "plugins": ["@typescript-eslint", "simple-import-sort"],
   "parser": "@typescript-eslint/parser",
+  "settings": {
+    "tailwindcss": {
+      "callees": ["cn"],
+      "config": "tailwind.config.js"
+    }
+  },
   "rules": {
     "semi": ["error", "always"],
     "quotes": ["error", "single", { "avoidEscape": true }],
@@ -39,6 +46,7 @@
       "error",
       { "namedComponents": "function-declaration" }
     ],
+    "tailwindcss/no-custom-classname": "error",
     "import/newline-after-import": ["error", { "count": 1 }],
     "import/first": "error",
     "import/no-duplicates": "error",
