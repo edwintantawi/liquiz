@@ -90,7 +90,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <p className="text-xs text-muted-foreground">
               Copyright © 2023 LiQuiz
             </p>
-            <Button size="icon" variant="secondary" className="border">
+            <Button asChild size="icon" variant="secondary" className="border">
               <Link href="#">
                 <Icons.BackToTop size={20} />
                 <span className="sr-only">Back to top</span>
