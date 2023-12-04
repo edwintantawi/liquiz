@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Link from 'next/link';
 
 import { GeistMono } from 'geist/font/mono';
@@ -16,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { Skeleton } from '~/components/ui/skeleton';
 import { cn } from '~/lib/utils';
 
 import '~/app/style.css';
@@ -44,7 +46,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </Link>
             </Button>
 
-            <SearchBar />
+            <React.Suspense fallback={<Skeleton className="h-10 w-full" />}>
+              <SearchBar />
+            </React.Suspense>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -85,7 +89,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Container>{children}</Container>
         </main>
 
-        <footer>
+        <footer className="mt-8">
           <Container className="flex items-center justify-between border-t">
             <p className="text-xs text-muted-foreground">
               Copyright © 2023 LiQuiz
