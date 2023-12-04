@@ -31,6 +31,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={cn(GeistSans.variable, GeistMono.variable, 'h-full')}
     >
       <body className="flex h-full flex-col">
+        <a href="#main" className="sr-only">
+          Skip to main content
+        </a>
+
         <nav className="sticky top-0 z-50 bg-background">
           <Container className="flex items-center justify-between gap-2 border-b">
             <Button asChild size="icon" className="shrink-0">
@@ -77,7 +81,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </Container>
         </nav>
 
-        <main className="flex-1">
+        <main id="main" className="flex-1">
           <Container>{children}</Container>
         </main>
 
