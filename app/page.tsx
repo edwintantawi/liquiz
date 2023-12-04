@@ -1,12 +1,20 @@
 import * as React from 'react';
+import Link from 'next/link';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { Icons } from '~/components/icons';
-import { SubjectCount, SubjectCountSkeleton } from '~/components/subject';
+import { Section } from '~/components/section';
+import {
+  SubjectCount,
+  SubjectCountSkeleton,
+  SubjectLatestList,
+  SubjectListSkeleton,
+} from '~/components/subject';
 import { TopicCount, TopicCountSkeleton } from '~/components/topic';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Button } from '~/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,6 +64,35 @@ export default async function RootPage() {
             </div>
           </ErrorBoundary>
         </div>
+
+        <Section
+          title="Latest Subjects"
+          description="Explore the latest subjects you created"
+          endAdornment={
+            <Button asChild variant="outline" size="icon">
+              <Link href="/subjects">
+                <Icons.ChevronRight size={20} />
+                <span className="sr-only">View all subjects</span>
+              </Link>
+            </Button>
+          }
+        >
+          <ErrorBoundary
+            fallback={
+              <Alert variant="destructive">
+                <Icons.Error size={20} />
+                <AlertTitle>Something went wrong</AlertTitle>
+                <AlertDescription>
+                  Failed to request your latest subjects
+                </AlertDescription>
+              </Alert>
+            }
+          >
+            <React.Suspense fallback={<SubjectListSkeleton count={6} />}>
+              <SubjectLatestList />
+            </React.Suspense>
+          </ErrorBoundary>
+        </Section>
       </div>
     </>
   );

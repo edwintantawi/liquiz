@@ -2,6 +2,8 @@ import {
   ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
+  BookPlusIcon,
+  ChevronRightIcon,
   DropletsIcon,
   Loader2Icon,
   MenuIcon,
@@ -22,4 +24,6 @@ export const Icons = {
   Favorite: StarIcon,
   BackToTop: ArrowUpIcon,
   Error: ShieldXIcon,
+  ChevronRight: ChevronRightIcon,
+  AddSubject: BookPlusIcon,
 };
