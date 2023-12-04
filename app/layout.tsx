@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 
+import { SignInButton } from '~/components/auth/signin-button';
+import { SignOutButton } from '~/components/auth/signout-button';
 import { Container } from '~/components/container';
 import { Icons } from '~/components/icons';
 import { SearchBar } from '~/components/search-bar';
@@ -18,15 +20,27 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { Skeleton } from '~/components/ui/skeleton';
+import { auth } from '~/lib/auth';
 import { cn } from '~/lib/utils';
 
 import '~/app/style.css';
+
+export const metadata = {
+  title: {
+    default: 'LiQuiz',
+    template: '%s - LiQuiz',
+  },
+  description:
+    'Turn your study materials into a dynamic and interactive learning experience with our AI-powered question generator.',
+};
 
 interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const { isAuthenticated } = await auth();
+
   return (
     <html
       lang="en"
@@ -39,16 +53,24 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         <nav className="sticky top-0 z-50 bg-background">
           <Container className="flex items-center justify-between gap-2 border-b">
-            <Button asChild size="icon" className="shrink-0">
-              <Link href="/">
-                <Icons.Brand className="text-background" />
-                <span className="sr-only">LiQuiz</span>
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button asChild size="icon" className="shrink-0">
+                <Link href="/">
+                  <Icons.Brand className="text-background" />
+                  <span className="sr-only">LiQuiz</span>
+                </Link>
+              </Button>
 
-            <React.Suspense fallback={<Skeleton className="h-10 w-full" />}>
-              <SearchBar />
-            </React.Suspense>
+              {!isAuthenticated && (
+                <span className="text-xl font-bold">LiQuiz</span>
+              )}
+            </div>
+
+            {isAuthenticated && (
+              <React.Suspense fallback={<Skeleton className="h-10 w-full" />}>
+                <SearchBar />
+              </React.Suspense>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -78,6 +100,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
                       <Icons.Favorite className="mr-2 h-4 w-4" />
                       <span>Favorite</span>
                     </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    {isAuthenticated ? (
+                      <SignOutButton className="w-full">Sign Out</SignOutButton>
+                    ) : (
+                      <SignInButton className="w-full">Sign In</SignInButton>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
