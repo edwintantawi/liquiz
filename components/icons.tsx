@@ -5,6 +5,7 @@ import {
   BookPlusIcon,
   ChevronRightIcon,
   DropletsIcon,
+  HistoryIcon,
   Loader2Icon,
   MenuIcon,
   SearchIcon,
@@ -26,4 +27,5 @@ export const Icons = {
   Error: ShieldXIcon,
   ChevronRight: ChevronRightIcon,
   AddSubject: BookPlusIcon,
+  History: HistoryIcon,
 };

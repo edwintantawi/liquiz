@@ -11,7 +11,12 @@ import {
   SubjectLatestList,
   SubjectListSkeleton,
 } from '~/components/subject';
-import { TopicCount, TopicCountSkeleton } from '~/components/topic';
+import {
+  TopicCount,
+  TopicCountSkeleton,
+  TopicLatestList,
+  TopicListSkeleton,
+} from '~/components/topic';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
@@ -90,6 +95,35 @@ export default async function RootPage() {
           >
             <React.Suspense fallback={<SubjectListSkeleton count={6} />}>
               <SubjectLatestList />
+            </React.Suspense>
+          </ErrorBoundary>
+        </Section>
+
+        <Section
+          title="Latest Topics"
+          description="Explore the latest topics you created"
+          endAdornment={
+            <Button asChild variant="outline" size="icon">
+              <Link href="/topics">
+                <Icons.ChevronRight size={20} />
+                <span className="sr-only">View all topics</span>
+              </Link>
+            </Button>
+          }
+        >
+          <ErrorBoundary
+            fallback={
+              <Alert variant="destructive">
+                <Icons.Error size={20} />
+                <AlertTitle>Something went wrong</AlertTitle>
+                <AlertDescription>
+                  Failed to request your latest topics
+                </AlertDescription>
+              </Alert>
+            }
+          >
+            <React.Suspense fallback={<TopicListSkeleton count={4} />}>
+              <TopicLatestList />
             </React.Suspense>
           </ErrorBoundary>
         </Section>
