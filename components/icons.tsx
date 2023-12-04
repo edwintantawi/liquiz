@@ -1,4 +1,5 @@
 import {
+  ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
   DropletsIcon,
@@ -18,4 +19,5 @@ export const Icons = {
   Subject: BookIcon,
   Topic: BookmarkIcon,
   Favorite: StarIcon,
+  BackToTop: ArrowUpIcon,
 };

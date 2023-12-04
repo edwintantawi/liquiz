@@ -76,9 +76,24 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </DropdownMenu>
           </Container>
         </nav>
+
         <main className="flex-1">
           <Container>{children}</Container>
         </main>
+
+        <footer>
+          <Container className="flex items-center justify-between border-t">
+            <p className="text-xs text-muted-foreground">
+              Copyright © 2023 LiQuiz
+            </p>
+            <Button size="icon" variant="secondary" className="border">
+              <Link href="#">
+                <Icons.BackToTop size={20} />
+                <span className="sr-only">Back to top</span>
+              </Link>
+            </Button>
+          </Container>
+        </footer>
       </body>
     </html>
   );
