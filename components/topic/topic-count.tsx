@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Icons } from '~/components/icons';
 import { Skeleton } from '~/components/ui/skeleton';
-import { getTopicsCount } from '~/lib/queries/topics';
+import { getTopicsCount } from '~/lib/queries/topic';
 
 export async function TopicCount() {
   const count = await getTopicsCount();
