@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { signIn } from 'next-auth/react';
 
@@ -12,8 +13,15 @@ interface SignInButtonProps
 }
 
 export function SignInButton({ children, ...props }: SignInButtonProps) {
+  const searchParams = useSearchParams();
+
+  const handleSignIn = () => {
+    const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
+    signIn('google', { callbackUrl });
+  };
+
   return (
-    <Button onClick={() => signIn('google')} {...props}>
+    <Button onClick={handleSignIn} {...props}>
       {children}
     </Button>
   );
