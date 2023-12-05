@@ -9,7 +9,8 @@
     "lint": "next lint",
     "format": "prettier --write **/*.{js,jsx,ts,tsx,json,md}",
     "commitlint": "commitlint --edit",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "postinstall": "prisma generate"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,md}": [
