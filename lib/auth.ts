@@ -18,6 +18,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_OAUTH_CLIENT_ID,
       clientSecret: env.GOOGLE_OAUTH_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent',
+        },
+      },
     }),
   ],
   callbacks: {
