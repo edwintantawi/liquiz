@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { TopicItem } from '~/components/topic';
-import { getLatestTopics } from '~/lib/queries/topics';
+import { getLatestTopics } from '~/lib/queries/topic';
 
 export async function TopicLatestList() {
   const latestTopics = await getLatestTopics({ limit: 5 });
