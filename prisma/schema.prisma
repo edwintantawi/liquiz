@@ -46,6 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Subject       Subject[]
 
   @@map("users")
 }
@@ -57,4 +58,17 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Subject {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  title       String   @db.VarChar(64)
+  description String   @db.VarChar(100)
+  rawFile     String   @map("raw_file")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subjects")
 }
