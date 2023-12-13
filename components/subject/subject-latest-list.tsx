@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { CreateSubject } from '~/components/subject/create-subject';
+import { CreateSubjectButton } from '~/components/subject/create-subject-button';
 import { SubjectItem } from '~/components/subject/subject-item';
 import { getLatestSubjects } from '~/lib/queries/subject';
 import { cn } from '~/lib/utils';
@@ -24,7 +24,7 @@ export async function SubjectLatestList() {
         );
       })}
       <li className={cn({ 'col-span-2': latestSubject.length % 2 === 0 })}>
-        <CreateSubject />
+        <CreateSubjectButton />
       </li>
     </ul>
   );

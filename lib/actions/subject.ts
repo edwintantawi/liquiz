@@ -1,33 +1,38 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { loadPdfDocument, splitter, vectorStore } from '~/lib/langchain';
 import { createSubjectSchema } from '~/lib/schema/subject';
+import { ServerAction } from '~/lib/types';
 
-export async function createSubject(formData: FormData) {
+export const createSubject: ServerAction<typeof createSubjectSchema> = async (
+  _,
+  formData
+) => {
   const validatedForm = createSubjectSchema.safeParse(
     Object.fromEntries(formData)
   );
-
-  const session = await auth();
-
-  if (!session.isAuthenticated) {
-    return {
-      status: 'ERROR',
-      error: 'Unauthenticated user',
-      payload: null,
-    };
-  }
-
   if (!validatedForm.success) {
     return {
-      status: 'ERROR',
-      error: validatedForm.error.errors[0].message,
-      payload: null,
+      validationErrors: validatedForm.error.flatten().fieldErrors,
+      error: null,
+      message: null,
     };
   }
 
+  const session = await auth();
+  if (!session.isAuthenticated) {
+    return {
+      validationErrors: null,
+      error: 'User must be authenticated to perform this action',
+      message: null,
+    };
+  }
+
+  let subjectId;
   try {
     const docs = await loadPdfDocument(validatedForm.data.document);
     const chunks = await splitter.splitDocuments(docs);
@@ -40,9 +45,10 @@ export async function createSubject(formData: FormData) {
         userId: session.user.id,
         title: validatedForm.data.title,
         description: validatedForm.data.description,
-        rawFile: 'NOT_IMPLEMENTED',
+        rawFile: validatedForm.data.document.name,
       },
     });
+    subjectId = id;
 
     await vectorStore.addModels(
       await database.$transaction(
@@ -60,11 +66,11 @@ export async function createSubject(formData: FormData) {
   } catch (error) {
     console.error(error);
     return {
-      status: 'ERROR',
+      validationErrors: null,
       error: 'Fail to store new subject',
-      payload: null,
+      message: null,
     };
   }
 
-  return { status: 'SUCCESS', error: null, payload: null };
-}
+  redirect(`/subjects/${subjectId}`);
+};
