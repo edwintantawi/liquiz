@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import { Icons } from '~/components/icons';
-import { SubjectItem } from '~/components/subject';
-import { Button } from '~/components/ui/button';
+import { CreateSubject } from '~/components/subject/create-subject';
+import { SubjectItem } from '~/components/subject/subject-item';
 import { getLatestSubjects } from '~/lib/queries/subject';
 
 export async function SubjectLatestList() {
@@ -24,13 +23,7 @@ export async function SubjectLatestList() {
         );
       })}
       <li>
-        <Button
-          variant="ghost"
-          className="flex h-full w-full border-spacing-2 flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed p-3 font-normal text-slate-400 hover:ring-2 hover:ring-ring hover:ring-offset-2"
-        >
-          <Icons.AddSubject size={30} strokeWidth={1.5} />
-          Create new subject
-        </Button>
+        <CreateSubject />
       </li>
     </ul>
   );

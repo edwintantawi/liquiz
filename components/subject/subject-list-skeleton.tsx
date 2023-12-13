@@ -1,4 +1,4 @@
-import { SubjectItemSkeleton } from '~/components/subject';
+import { SubjectItemSkeleton } from '~/components/subject/subject-item';
 
 interface SubjectListSkeletonProps {
   count: number;
