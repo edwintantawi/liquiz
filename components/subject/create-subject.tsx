@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Icons } from '~/components/icons';
+import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -30,6 +31,7 @@ import { createSubjectSchema } from '~/lib/schema/subject';
 
 export function CreateSubject() {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
   const form = useForm<z.infer<typeof createSubjectSchema>>({
     resolver: zodResolver(createSubjectSchema),
     defaultValues: {
@@ -56,7 +58,14 @@ export function CreateSubject() {
     for (const [key, value] of Object.entries(data)) {
       formData.set(key, value);
     }
+
     const result = await createSubject(formData);
+    if (result.error !== null) {
+      setError(result.error);
+      return;
+    }
+
+    setError(null);
     console.log(result);
   };
 
@@ -131,6 +140,14 @@ export function CreateSubject() {
                   </FormItem>
                 )}
               />
+
+              {error && (
+                <Alert variant="destructive">
+                  <Icons.Error size={20} />
+                  <AlertTitle>Something went wrong</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
               <div className="flex justify-end gap-2">
                 <Button
