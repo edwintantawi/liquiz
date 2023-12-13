@@ -9,7 +9,7 @@ export const createSubjectSchema = z.object({
     .string()
     .max(100, { message: 'Maximum description length is 100 characters' }),
   document: z
-    .custom<File | undefined>((data) => data !== undefined, {
+    .custom<File>((data) => data !== undefined, {
       message: 'Document is required',
     })
     .refine((file) => file?.type === 'application/pdf', {
