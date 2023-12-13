@@ -46,7 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Subject       Subject[]
+  Subjects      Subject[]
 
   @@map("users")
 }
@@ -61,14 +61,26 @@ model VerificationToken {
 }
 
 model Subject {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  title       String   @db.VarChar(64)
-  description String   @db.VarChar(100)
-  rawFile     String   @map("raw_file")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String     @id @default(uuid())
+  userId      String     @map("user_id")
+  title       String     @db.VarChar(64)
+  description String     @db.VarChar(100)
+  rawFile     String     @map("raw_file")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Documents   Document[]
 
   @@map("subjects")
+}
+
+model Document {
+  id        String                 @id @default(uuid())
+  subjectId String                 @map("subject_id")
+  content   String
+  metadata  Json
+  vector    Unsupported("vector")?
+  subject   Subject                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
 }
