@@ -68,6 +68,9 @@ dependencies:
   react-hook-form:
     specifier: ^7.49.0
     version: 7.49.0(react@18.2.0)
+  seed-color:
+    specifier: ^2.0.1
+    version: 2.0.1
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -5018,6 +5021,16 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /seed-color@2.0.1:
+    resolution: {integrity: sha512-SfBpG/n4xbhk8CuykaGgKJXgp+Px1uPdYSOVWgiez6tb7fA7YPf6vMQKyQY7b3Ccbtn8iAoV//pMpFYFTPWnxw==}
+    dependencies:
+      seedrandom: 2.4.2
+    dev: false
+
+  /seedrandom@2.4.2:
+    resolution: {integrity: sha512-uQ72txMoObtuJooiBLSVs5Yu2e9d/lHQz0boaqHjW8runXB9vR8nFtaZV54wYii613N0C8ZqTBLsfwDhAdpvqQ==}
     dev: false
 
   /semver@5.7.2:
