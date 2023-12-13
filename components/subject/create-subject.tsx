@@ -74,7 +74,7 @@ export function CreateSubject() {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-full w-full border-spacing-2 flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed p-3 font-normal text-slate-400 hover:ring-2 hover:ring-ring hover:ring-offset-2"
+          className="flex h-full min-h-[157px] w-full border-spacing-2 flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed p-3 font-normal text-slate-400 hover:ring-2 hover:ring-ring hover:ring-offset-2"
         >
           <Icons.AddSubject size={30} strokeWidth={1.5} />
           Create new subject
@@ -157,7 +157,10 @@ export function CreateSubject() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" loading={form.formState.isSubmitting}>
+                <Button type="submit">
+                  {form.formState.isSubmitting && (
+                    <Icons.Loader size={20} className="animate-spin" />
+                  )}
                   Create
                 </Button>
               </div>
