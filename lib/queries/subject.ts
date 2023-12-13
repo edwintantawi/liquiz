@@ -54,3 +54,25 @@ export async function getLatestSubjects({
     };
   });
 }
+
+export async function getSubjectById(id: string): Promise<Subject | null> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subject = await database.subject.findUnique({
+    where: { id, userId: session.user.id },
+  });
+
+  if (subject === null) return null;
+
+  return {
+    id: subject.id,
+    title: subject.title,
+    description: subject.description,
+    colorCode: seedColor(subject.id).toHex(),
+    numberOfTopics: 0,
+  };
+}
