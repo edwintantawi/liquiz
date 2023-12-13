@@ -40,7 +40,7 @@ export function SubjectItem({
           </Link>
         </h3>
         <p className="truncate text-xs font-light text-muted-foreground">
-          {description}
+          {description || '<no description>'}
         </p>
       </header>
     </article>
