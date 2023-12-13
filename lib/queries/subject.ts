@@ -2,12 +2,19 @@ import seedColor from 'seed-color';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { delay } from '~/lib/utils';
 
 export async function getSubjectsCount() {
-  // TODO: fetch data from database
-  await delay(5000);
-  return 6;
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const count = await database.subject.count({
+    where: { userId: session.user.id },
+  });
+
+  return count;
 }
 
 type Subject = {
