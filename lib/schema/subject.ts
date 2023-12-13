@@ -9,10 +9,11 @@ export const createSubjectSchema = z.object({
     .string()
     .max(100, { message: 'Maximum description length is 100 characters' }),
   document: z
-    .custom<File>((data) => data !== undefined, {
+    .custom<File>()
+    .refine((file) => file.name !== '' && file.size !== 0, {
       message: 'Document is required',
     })
-    .refine((file) => file?.type === 'application/pdf', {
+    .refine((file) => file.type === 'application/pdf', {
       message: 'Document must be in pdf format',
     }),
 });
