@@ -22,4 +22,24 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = 'Input';
 
-export { Input };
+const InputMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
+  if (!children) {
+    return null;
+  }
+
+  return (
+    <p
+      ref={ref}
+      className={cn('text-xs font-light text-destructive', className)}
+      {...props}
+    >
+      {children}
+    </p>
+  );
+});
+InputMessage.displayName = 'InputMessage';
+
+export { Input, InputMessage };

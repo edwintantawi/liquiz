@@ -29,7 +29,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
@@ -39,13 +39,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Subjects      Subject[]
 
   @@map("users")
 }
@@ -57,4 +58,29 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Subject {
+  id          String     @id @default(uuid())
+  userId      String     @map("user_id")
+  title       String     @db.VarChar(64)
+  description String     @db.VarChar(100)
+  rawFile     String     @map("raw_file")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Documents   Document[]
+
+  @@map("subjects")
+}
+
+model Document {
+  id        String                 @id @default(uuid())
+  subjectId String                 @map("subject_id")
+  content   String
+  metadata  Json
+  vector    Unsupported("vector")?
+  subject   Subject                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
 }

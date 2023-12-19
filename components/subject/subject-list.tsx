@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { CreateSubjectButton } from '~/components/subject/create-subject-button';
 import { SubjectItem } from '~/components/subject/subject-item';
-import { getLatestSubjects } from '~/lib/queries/subject';
+import { getAllSubjects } from '~/lib/queries/subject';
 import { cn } from '~/lib/utils';
 
-export async function SubjectLatestList() {
-  const latestSubject = await getLatestSubjects({ limit: 5 });
+export async function SubjectList() {
+  const latestSubject = await getAllSubjects();
 
   return (
     <ul className="grid grid-cols-2 gap-2">

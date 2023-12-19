@@ -2,13 +2,14 @@ import * as React from 'react';
 import Link from 'next/link';
 
 import { Skeleton } from '~/components/ui/skeleton';
+import { cn } from '~/lib/utils';
 
 interface SubjectItemProps {
   id: string;
   title: string;
   description: string;
   numberOfTopics: number;
-  colorCode: string;
+  color: string;
 }
 
 export function SubjectItem({
@@ -16,15 +17,12 @@ export function SubjectItem({
   title,
   description,
   numberOfTopics,
-  colorCode,
+  color,
 }: SubjectItemProps) {
   return (
     <article className="relative overflow-hidden rounded-md border hover:ring-2 hover:ring-ring hover:ring-offset-2">
       <div
-        className="flex aspect-[16/8] items-end justify-end p-2"
-        style={{
-          backgroundColor: colorCode,
-        }}
+        className={cn(color, 'flex aspect-[16/8] items-end justify-end p-2')}
       >
         <span className="rounded-full border bg-muted px-3 py-0.5 text-[0.60rem] text-muted-foreground">
           {numberOfTopics} {numberOfTopics <= 1 ? 'Topic' : 'Topics'}
@@ -40,7 +38,7 @@ export function SubjectItem({
           </Link>
         </h3>
         <p className="truncate text-xs font-light text-muted-foreground">
-          {description}
+          {description || '<no description>'}
         </p>
       </header>
     </article>

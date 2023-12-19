@@ -1,62 +1,90 @@
-import { delay } from '~/lib/utils';
+import { auth } from '~/lib/auth';
+import { database } from '~/lib/database';
+import { Subject } from '~/lib/entities/subject';
 
 export async function getSubjectsCount() {
-  // TODO: fetch data from database
-  await delay(5000);
-  return 6;
-}
+  const session = await auth();
 
-type Subject = {
-  id: string;
-  title: string;
-  description: string;
-  numberOfTopics: number;
-  colorCode: string;
-};
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const count = await database.subject.count({
+    where: { userId: session.user.id },
+  });
+
+  return count;
+}
 
 export async function getLatestSubjects({
   limit,
 }: {
   limit: number;
 }): Promise<Subject[]> {
-  // TODO: fetch data from database
-  await delay(3000);
+  const session = await auth();
 
-  return [
-    {
-      id: '1',
-      title: 'Computer Science',
-      description: '3rd semester courses',
-      colorCode: '#ED3030',
-      numberOfTopics: 8,
-    },
-    {
-      id: '2',
-      title: 'Quantum Mathematics',
-      description: 'Quantum mathematics book',
-      colorCode: '#2E5ED9',
-      numberOfTopics: 2,
-    },
-    {
-      id: '3',
-      title: 'Citizenship',
-      description: '7th grade citizenship',
-      colorCode: '#3ED0B6',
-      numberOfTopics: 4,
-    },
-    {
-      id: '4',
-      title: 'Physical Education',
-      description: 'Physical education from academic book',
-      colorCode: '#3CAE14',
-      numberOfTopics: 6,
-    },
-    {
-      id: '5',
-      title: 'Javascript',
-      description: "From the book you don't know js",
-      colorCode: '#EE209B',
-      numberOfTopics: 1,
-    },
-  ].slice(0, limit);
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subjects = await database.subject.findMany({
+    where: { userId: session.user?.id },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+  });
+
+  return subjects.map((subject) => {
+    return new Subject({
+      id: subject.id,
+      title: subject.title,
+      description: subject.description,
+      numberOfTopics: 0,
+      rawFile: subject.rawFile,
+    });
+  });
+}
+
+export async function getSubjectById(id: string): Promise<Subject | null> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subject = await database.subject.findUnique({
+    where: { id, userId: session.user.id },
+  });
+
+  if (subject === null) return null;
+
+  return new Subject({
+    id: subject.id,
+    title: subject.title,
+    description: subject.description,
+    numberOfTopics: 0,
+    rawFile: subject.rawFile,
+  });
+}
+
+export async function getAllSubjects(): Promise<Subject[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subjects = await database.subject.findMany({
+    where: { userId: session.user.id },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return subjects.map((subject) => {
+    return new Subject({
+      id: subject.id,
+      title: subject.title,
+      description: subject.description,
+      numberOfTopics: 0,
+      rawFile: subject.rawFile,
+    });
+  });
 }
