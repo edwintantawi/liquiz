@@ -38,9 +38,7 @@ export async function getLatestSubjects({
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user?.id },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: { createdAt: 'desc' },
     take: limit,
   });
 
@@ -86,6 +84,7 @@ export async function getAllSubjects(): Promise<Subject[]> {
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user.id },
+    orderBy: { createdAt: 'desc' },
   });
 
   return subjects.map((subject) => {
