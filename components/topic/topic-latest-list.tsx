@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { TopicItem } from '~/components/topic';
+import { TopicItem } from '~/components/topic/topic-item';
 import { getLatestTopics } from '~/lib/queries/topic';
 
 export async function TopicLatestList() {

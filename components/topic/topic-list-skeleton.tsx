@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { TopicItemSkeleton } from '~/components/topic';
+import { TopicItemSkeleton } from '~/components/topic/topic-item';
 
 interface TopicListSkeletonProps {
   count: number;

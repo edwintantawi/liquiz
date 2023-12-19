@@ -8,15 +8,12 @@ import { Section } from '~/components/section';
 import {
   SubjectCount,
   SubjectCountSkeleton,
-  SubjectLatestList,
-  SubjectListSkeleton,
-} from '~/components/subject';
-import {
-  TopicCount,
-  TopicCountSkeleton,
-  TopicLatestList,
-  TopicListSkeleton,
-} from '~/components/topic';
+} from '~/components/subject/subject-count';
+import { SubjectLatestList } from '~/components/subject/subject-latest-list';
+import { SubjectListSkeleton } from '~/components/subject/subject-list-skeleton';
+import { TopicCount, TopicCountSkeleton } from '~/components/topic/topic-count';
+import { TopicLatestList } from '~/components/topic/topic-latest-list';
+import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';

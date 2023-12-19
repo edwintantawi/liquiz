@@ -1,9 +1,20 @@
-import { delay } from '~/lib/utils';
+import seedColor from 'seed-color';
+
+import { auth } from '~/lib/auth';
+import { database } from '~/lib/database';
 
 export async function getSubjectsCount() {
-  // TODO: fetch data from database
-  await delay(5000);
-  return 6;
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const count = await database.subject.count({
+    where: { userId: session.user.id },
+  });
+
+  return count;
 }
 
 type Subject = {
@@ -19,44 +30,49 @@ export async function getLatestSubjects({
 }: {
   limit: number;
 }): Promise<Subject[]> {
-  // TODO: fetch data from database
-  await delay(3000);
+  const session = await auth();
 
-  return [
-    {
-      id: '1',
-      title: 'Computer Science',
-      description: '3rd semester courses',
-      colorCode: '#ED3030',
-      numberOfTopics: 8,
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subjects = await database.subject.findMany({
+    where: { userId: session.user?.id },
+    orderBy: {
+      createdAt: 'desc',
     },
-    {
-      id: '2',
-      title: 'Quantum Mathematics',
-      description: 'Quantum mathematics book',
-      colorCode: '#2E5ED9',
-      numberOfTopics: 2,
-    },
-    {
-      id: '3',
-      title: 'Citizenship',
-      description: '7th grade citizenship',
-      colorCode: '#3ED0B6',
-      numberOfTopics: 4,
-    },
-    {
-      id: '4',
-      title: 'Physical Education',
-      description: 'Physical education from academic book',
-      colorCode: '#3CAE14',
-      numberOfTopics: 6,
-    },
-    {
-      id: '5',
-      title: 'Javascript',
-      description: "From the book you don't know js",
-      colorCode: '#EE209B',
-      numberOfTopics: 1,
-    },
-  ].slice(0, limit);
+    take: limit,
+  });
+
+  return subjects.map((subject) => {
+    return {
+      id: subject.id,
+      title: subject.title,
+      description: subject.description,
+      colorCode: seedColor(subject.id).toHex(),
+      numberOfTopics: 0,
+    };
+  });
+}
+
+export async function getSubjectById(id: string): Promise<Subject | null> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subject = await database.subject.findUnique({
+    where: { id, userId: session.user.id },
+  });
+
+  if (subject === null) return null;
+
+  return {
+    id: subject.id,
+    title: subject.title,
+    description: subject.description,
+    colorCode: seedColor(subject.id).toHex(),
+    numberOfTopics: 0,
+  };
 }
