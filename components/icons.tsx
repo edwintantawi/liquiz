@@ -1,10 +1,13 @@
 import {
+  ArrowLeftIcon,
   ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
   BookPlusIcon,
   ChevronRightIcon,
   DropletsIcon,
+  ExternalLinkIcon,
+  FileIcon,
   HistoryIcon,
   Loader2Icon,
   MenuIcon,
@@ -30,4 +33,7 @@ export const Icons = {
   AddSubject: BookPlusIcon,
   History: HistoryIcon,
   Plus: PlusIcon,
+  Back: ArrowLeftIcon,
+  File: FileIcon,
+  ExternalLink: ExternalLinkIcon,
 };
