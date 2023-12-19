@@ -1,4 +1,4 @@
-import seedColor from 'seed-color';
+import { getRandomColor } from '~/lib/utils';
 
 type SubjectConstructor = {
   id: string;
@@ -14,7 +14,7 @@ export class Subject {
   public description: string;
   public numberOfTopics: number;
   public rawFile: string;
-  public colorCode: string;
+  public color: string;
 
   constructor({
     id,
@@ -28,6 +28,6 @@ export class Subject {
     this.description = description;
     this.numberOfTopics = numberOfTopics;
     this.rawFile = rawFile;
-    this.colorCode = seedColor(id).toHex();
+    this.color = getRandomColor(id);
   }
 }

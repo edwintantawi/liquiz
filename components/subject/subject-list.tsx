@@ -18,7 +18,7 @@ export async function SubjectList() {
               title={subject.title}
               description={subject.description}
               numberOfTopics={subject.numberOfTopics}
-              colorCode={subject.colorCode}
+              color={subject.color}
             />
           </li>
         );
