@@ -38,9 +38,7 @@ export async function getLatestSubjects({
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user?.id },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: { createdAt: 'desc' },
     take: limit,
   });
 
@@ -75,4 +73,27 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
     colorCode: seedColor(subject.id).toHex(),
     numberOfTopics: 0,
   };
+}
+
+export async function getAllSubjects(): Promise<Subject[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const subjects = await database.subject.findMany({
+    where: { userId: session.user.id },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return subjects.map((subject) => {
+    return {
+      id: subject.id,
+      title: subject.title,
+      description: subject.description,
+      colorCode: seedColor(subject.id).toHex(),
+      numberOfTopics: 0,
+    };
+  });
 }

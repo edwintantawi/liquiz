@@ -8,6 +8,7 @@ import {
   HistoryIcon,
   Loader2Icon,
   MenuIcon,
+  PlusIcon,
   SearchIcon,
   ShieldXIcon,
   StarIcon,
@@ -28,4 +29,5 @@ export const Icons = {
   ChevronRight: ChevronRightIcon,
   AddSubject: BookPlusIcon,
   History: HistoryIcon,
+  Plus: PlusIcon,
 };
