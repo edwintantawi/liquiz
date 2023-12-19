@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { Container } from '~/components/container';
 import { Header } from '~/components/header';
 import { Icons } from '~/components/icons';
 import { SubjectList } from '~/components/subject/subject-list';
@@ -12,7 +13,7 @@ import { Button } from '~/components/ui/button';
 
 export default function SubjectsPage() {
   return (
-    <div>
+    <Container>
       <Header title="Subjects" description="Collection of existing subjects">
         <Button asChild size="icon" className="h-12 w-12">
           <Link href="/subjects/new">
@@ -35,6 +36,6 @@ export default function SubjectsPage() {
           <SubjectList />
         </React.Suspense>
       </ErrorBoundary>
-    </div>
+    </Container>
   );
 }

@@ -1,7 +1,6 @@
-import seedColor from 'seed-color';
-
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { Subject } from '~/lib/entities/subject';
 
 export async function getSubjectsCount() {
   const session = await auth();
@@ -16,14 +15,6 @@ export async function getSubjectsCount() {
 
   return count;
 }
-
-type Subject = {
-  id: string;
-  title: string;
-  description: string;
-  numberOfTopics: number;
-  colorCode: string;
-};
 
 export async function getLatestSubjects({
   limit,
@@ -43,13 +34,13 @@ export async function getLatestSubjects({
   });
 
   return subjects.map((subject) => {
-    return {
+    return new Subject({
       id: subject.id,
       title: subject.title,
       description: subject.description,
-      colorCode: seedColor(subject.id).toHex(),
       numberOfTopics: 0,
-    };
+      rawFile: subject.rawFile,
+    });
   });
 }
 
@@ -66,13 +57,13 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
 
   if (subject === null) return null;
 
-  return {
+  return new Subject({
     id: subject.id,
     title: subject.title,
     description: subject.description,
-    colorCode: seedColor(subject.id).toHex(),
     numberOfTopics: 0,
-  };
+    rawFile: subject.rawFile,
+  });
 }
 
 export async function getAllSubjects(): Promise<Subject[]> {
@@ -88,12 +79,12 @@ export async function getAllSubjects(): Promise<Subject[]> {
   });
 
   return subjects.map((subject) => {
-    return {
+    return new Subject({
       id: subject.id,
       title: subject.title,
       description: subject.description,
-      colorCode: seedColor(subject.id).toHex(),
       numberOfTopics: 0,
-    };
+      rawFile: subject.rawFile,
+    });
   });
 }

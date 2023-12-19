@@ -1,6 +1,6 @@
 module.exports = {
   darkMode: ['class'],
-  content: ['app/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],
+  content: ['app/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}', 'lib/color.ts'],
   theme: {
     container: {
       center: true,
