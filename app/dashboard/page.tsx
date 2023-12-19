@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { Container } from '~/components/container';
 import { Icons } from '~/components/icons';
 import { Section } from '~/components/section';
 import {
@@ -33,8 +34,10 @@ export default async function DashboardPage() {
   if (!session.isAuthenticated) return null;
 
   return (
-    <>
-      <h1 className="sr-only">LiQuiz Dashboard</h1>
+    <Container>
+      <header>
+        <h1 className="sr-only">LiQuiz Dashboard</h1>
+      </header>
       <div className="space-y-6">
         <div className="space-y-2">
           <div className="grid grid-cols-[auto,1fr] items-center gap-3 rounded-md border px-4 py-3">
@@ -133,6 +136,6 @@ export default async function DashboardPage() {
           </ErrorBoundary>
         </Section>
       </div>
-    </>
+    </Container>
   );
 }

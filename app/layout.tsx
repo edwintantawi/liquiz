@@ -118,7 +118,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         </nav>
 
         <main id="main" className="flex-1">
-          <Container>{children}</Container>
+          {children}
         </main>
 
         <footer className="mt-8">
