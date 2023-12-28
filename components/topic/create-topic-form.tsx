@@ -36,13 +36,6 @@ export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
   return (
     <form action={formAction} className="space-y-3">
       <div className="space-y-1">
-        <Label required htmlFor="title">
-          Title
-        </Label>
-        <Input id="title" name="title" placeholder="Milkyway Galaxy" />
-        <InputMessage>{state?.validationErrors?.title?.[0]}</InputMessage>
-      </div>
-      <div className="space-y-1">
         <Label required htmlFor="description">
           Subject
         </Label>
@@ -59,6 +52,13 @@ export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
           </SelectContent>
         </Select>
         <InputMessage>{state?.validationErrors?.subject?.[0]}</InputMessage>
+      </div>
+      <div className="space-y-1">
+        <Label required htmlFor="title">
+          Title
+        </Label>
+        <Input id="title" name="title" placeholder="Milkyway Galaxy" />
+        <InputMessage>{state?.validationErrors?.title?.[0]}</InputMessage>
       </div>
 
       {state.error && (
