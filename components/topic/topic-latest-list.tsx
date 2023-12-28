@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { CreateTopicButton } from '~/components/topic/create-topic-button';
 import { TopicItem } from '~/components/topic/topic-item';
 import { getLatestTopics } from '~/lib/queries/topic';
 
@@ -23,6 +24,9 @@ export async function TopicLatestList() {
           </li>
         );
       })}
+      <li>
+        <CreateTopicButton />
+      </li>
     </ul>
   );
 }
