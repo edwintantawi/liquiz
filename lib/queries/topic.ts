@@ -1,27 +1,57 @@
-import { delay } from '~/lib/utils';
+import { auth } from '~/lib/auth';
+import { colors } from '~/lib/color';
+import { database } from '~/lib/database';
+import { Topic } from '~/lib/types/topic';
+import { delay, getRandomColor } from '~/lib/utils';
 
 export async function getTopicsCount() {
-  // TODO: fetch data from database
-  await delay(6000);
-  return 23;
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const count = await database.topic.count({
+    where: { subject: { userId: session.user.id } },
+  });
+
+  return count;
 }
 
-type Topic = {
-  id: string;
-  title: string;
-  score: number;
-  subject: {
-    id: string;
-    title: string;
-    colorCode: string;
-  };
-};
+export async function getAllTopics(): Promise<Topic[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topics = await database.topic.findMany({
+    where: { subject: { userId: session.user.id } },
+    include: { subject: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return topics.map((topic) => {
+    return {
+      id: topic.id,
+      title: topic.title,
+      subjectId: topic.subjectId,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
+      subject: {
+        id: topic.subject.id,
+        title: topic.subject.title,
+        color: getRandomColor(topic.subject.id),
+      },
+    };
+  });
+}
 
 export async function getLatestTopics({
   limit,
 }: {
   limit: number;
-}): Promise<Topic[]> {
+}): Promise<unknown> {
   // TODO: fetch data from database
   await delay(4000);
 
@@ -29,41 +59,37 @@ export async function getLatestTopics({
     {
       id: '1',
       title: 'Central Processing Unit',
-      score: 80,
       subject: {
         id: '1',
         title: 'Computer Science',
-        colorCode: '#ED3030',
+        color: colors[0],
       },
     },
     {
       id: '2',
       title: 'HTTP Protocol',
-      score: 90,
       subject: {
         id: '1',
         title: 'Computer Science',
-        colorCode: '#ED3030',
+        color: colors[0],
       },
     },
     {
       id: '3',
       title: 'Browser APIs',
-      score: 82,
       subject: {
         id: '5',
         title: 'Javascript',
-        colorCode: '#EE209B',
+        color: colors[8],
       },
     },
     {
       id: '4',
       title: 'State Law',
-      score: 20,
       subject: {
         id: '3',
         title: 'Citizenship',
-        colorCode: '#3ED0B6',
+        color: colors[4],
       },
     },
   ].slice(0, limit);

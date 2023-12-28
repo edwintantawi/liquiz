@@ -14,11 +14,10 @@ export async function TopicLatestList() {
             <TopicItem
               id={topic.id}
               title={topic.title}
-              score={topic.score}
               subject={{
                 id: topic.subject.id,
                 title: topic.subject.title,
-                colorCode: topic.subject.colorCode,
+                color: topic.subject.color,
               }}
             />
           </li>

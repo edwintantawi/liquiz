@@ -3,6 +3,7 @@ import {
   ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
+  BookmarkPlusIcon,
   BookPlusIcon,
   ChevronRightIcon,
   DropletsIcon,
@@ -36,4 +37,5 @@ export const Icons = {
   Back: ArrowLeftIcon,
   File: FileIcon,
   ExternalLink: ExternalLinkIcon,
+  AddTopic: BookmarkPlusIcon,
 };
