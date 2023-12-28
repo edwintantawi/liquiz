@@ -67,7 +67,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
     console.error(error);
     return {
       validationErrors: null,
-      error: 'Fail to store new subject',
+      error: 'Failed to store new subject',
       message: null,
     };
   }
