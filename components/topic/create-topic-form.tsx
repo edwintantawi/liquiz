@@ -56,7 +56,6 @@ export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
                 {subject.title}
               </SelectItem>
             ))}
-            <SelectItem value="sddsdfsadfasd">sakan error</SelectItem>
           </SelectContent>
         </Select>
         <InputMessage>{state?.validationErrors?.subject?.[0]}</InputMessage>
