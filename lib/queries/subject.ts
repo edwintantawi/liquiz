@@ -1,6 +1,7 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { Subject } from '~/lib/entities/subject';
+import { Subject } from '~/lib/types/subject';
+import { getRandomColor } from '~/lib/utils';
 
 export async function getSubjectsCount() {
   const session = await auth();
@@ -34,13 +35,17 @@ export async function getLatestSubjects({
   });
 
   return subjects.map((subject) => {
-    return new Subject({
+    return {
       id: subject.id,
+      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      numberOfTopics: 0,
       rawFile: subject.rawFile,
-    });
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
+      color: getRandomColor(subject.id),
+      numberOfTopics: 0,
+    };
   });
 }
 
@@ -57,13 +62,17 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
 
   if (subject === null) return null;
 
-  return new Subject({
+  return {
     id: subject.id,
+    userId: subject.userId,
     title: subject.title,
     description: subject.description,
-    numberOfTopics: 0,
     rawFile: subject.rawFile,
-  });
+    createdAt: subject.createdAt,
+    updatedAt: subject.updatedAt,
+    color: getRandomColor(subject.id),
+    numberOfTopics: 0,
+  };
 }
 
 export async function getAllSubjects(): Promise<Subject[]> {
@@ -79,12 +88,16 @@ export async function getAllSubjects(): Promise<Subject[]> {
   });
 
   return subjects.map((subject) => {
-    return new Subject({
+    return {
       id: subject.id,
+      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      numberOfTopics: 0,
       rawFile: subject.rawFile,
-    });
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
+      color: getRandomColor(subject.id),
+      numberOfTopics: 0,
+    };
   });
 }

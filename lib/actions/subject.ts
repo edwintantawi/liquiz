@@ -6,7 +6,7 @@ import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { loadPdfDocument, splitter, vectorStore } from '~/lib/langchain';
 import { createSubjectSchema } from '~/lib/schema/subject';
-import { ServerAction } from '~/lib/types';
+import { ServerAction } from '~/lib/types/action';
 
 export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   _,
