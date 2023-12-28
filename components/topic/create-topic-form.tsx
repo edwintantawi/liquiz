@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useFormState } from 'react-dom';
+import { useSearchParams } from 'next/navigation';
 
 import { Icons } from '~/components/icons';
 import { SubmitButton } from '~/components/submit-button';
@@ -33,13 +34,16 @@ interface CreateTopicFormProps {
 export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
   const [state, formAction] = useFormState(createTopic, initialState);
 
+  const searchParams = useSearchParams();
+  const initialSubjectId = searchParams.get('subject_id') ?? undefined;
+
   return (
     <form action={formAction} className="space-y-3">
       <div className="space-y-1">
         <Label required htmlFor="description">
           Subject
         </Label>
-        <Select name="subject">
+        <Select name="subject" defaultValue={initialSubjectId}>
           <SelectTrigger>
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
