@@ -6,11 +6,11 @@ import { getAllSubjects } from '~/lib/queries/subject';
 import { cn } from '~/lib/utils';
 
 export async function SubjectList() {
-  const latestSubject = await getAllSubjects();
+  const subjects = await getAllSubjects();
 
   return (
     <ul className="grid grid-cols-2 gap-2">
-      {latestSubject.map((subject) => {
+      {subjects.map((subject) => {
         return (
           <li key={subject.id}>
             <SubjectItem
@@ -23,7 +23,7 @@ export async function SubjectList() {
           </li>
         );
       })}
-      <li className={cn({ 'col-span-2': latestSubject.length % 2 === 0 })}>
+      <li className={cn({ 'col-span-2': subjects.length % 2 === 0 })}>
         <CreateSubjectButton />
       </li>
     </ul>

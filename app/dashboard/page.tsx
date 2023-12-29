@@ -130,7 +130,7 @@ export default async function DashboardPage() {
               </Alert>
             }
           >
-            <React.Suspense fallback={<TopicListSkeleton count={4} />}>
+            <React.Suspense fallback={<TopicListSkeleton count={6} />}>
               <TopicLatestList />
             </React.Suspense>
           </ErrorBoundary>
