@@ -11,7 +11,7 @@ export default function NotFound() {
         Could not find requested resource
       </p>
       <Button asChild>
-        <Link href="/">Return Home</Link>
+        <Link href="/dashboard">Return Home</Link>
       </Button>
     </div>
   );
