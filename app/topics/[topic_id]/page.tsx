@@ -26,6 +26,12 @@ export default async function TopicDetailPage({
         title={topic.title}
         subtitle={topic.subject.title}
         color={topic.subject.color}
+        startAdornment={
+          <span className="rounded-full border bg-muted px-3 py-0.5 text-[0.60rem] text-muted-foreground">
+            {questions.length}{' '}
+            {questions.length <= 1 ? 'Question' : 'Questions'}
+          </span>
+        }
       >
         <Button asChild size="icon" variant="outline" className="shrink-0">
           <Link href={`/subjects/${topic.subject.id}`}>
