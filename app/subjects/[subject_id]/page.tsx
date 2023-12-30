@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Container } from '~/components/container';
+import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
-import { SubjectHeader } from '~/components/subject/subject-header';
 import { Button } from '~/components/ui/button';
 import { getSubjectById } from '~/lib/queries/subject';
 
@@ -20,9 +20,9 @@ export default async function SubjectDetailPage({
 
   return (
     <Container className="p-0">
-      <SubjectHeader
+      <DetailHeader
         title={subject.title}
-        description={subject.description}
+        subtitle={subject.description}
         color={subject.color}
         startAdornment={
           <span className="rounded-full border bg-muted px-3 py-0.5 text-[0.60rem] text-muted-foreground">
@@ -39,7 +39,6 @@ export default async function SubjectDetailPage({
         </Button>
         <Button
           asChild
-          variant="outline"
           className="grid w-full grid-cols-[1fr,auto] justify-between"
         >
           <Link href="#">
@@ -50,7 +49,7 @@ export default async function SubjectDetailPage({
             <Icons.ExternalLink size={20} className="shrink-0" />
           </Link>
         </Button>
-      </SubjectHeader>
+      </DetailHeader>
 
       <div className="p-3" />
     </Container>
