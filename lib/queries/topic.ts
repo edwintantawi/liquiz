@@ -107,3 +107,33 @@ export async function getTopicById(id: string): Promise<Topic | null> {
     },
   };
 }
+
+export async function getAllTopicBySubjectId(
+  subjectId: string
+): Promise<Topic[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topics = await database.topic.findMany({
+    include: { subject: true },
+    where: { subject: { id: subjectId, userId: session.user.id } },
+  });
+
+  return topics.map((topic) => {
+    return {
+      id: topic.id,
+      title: topic.title,
+      subjectId: topic.subjectId,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
+      subject: {
+        id: topic.subject.id,
+        title: topic.subject.title,
+        color: getRandomColor(topic.subject.id),
+      },
+    };
+  });
+}
