@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useFormState } from 'react-dom';
 import Link from 'next/link';
 
-import { questions } from '~/app/topics/[topic_id]/data';
 import { Icons } from '~/components/icons';
 import { Question } from '~/components/question';
 import { SubmitButton } from '~/components/submit-button';
@@ -23,11 +22,17 @@ const initialState: ActionState<typeof submitTopicAnswerSchema> = {
 interface TopicQuestionFormProps {
   topicId: string;
   subjectId: string;
+  questions: {
+    id: string;
+    statement: string;
+    options: { id: string; title: string }[];
+  }[];
 }
 
 export function TopicQuestionForm({
   topicId,
   subjectId,
+  questions,
 }: TopicQuestionFormProps) {
   const [state, formAction] = useFormState(submitTopicAnswer, initialState);
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { questions } from '~/app/topics/[topic_id]/data';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
@@ -42,7 +43,11 @@ export default async function TopicDetailPage({
         </Button>
       </DetailHeader>
 
-      <TopicQuestionForm subjectId={topic.subject.id} topicId={topic.id} />
+      <TopicQuestionForm
+        topicId={topic.id}
+        subjectId={topic.subject.id}
+        questions={questions}
+      />
     </Container>
   );
 }
