@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
+import { TopicQuestionForm } from '~/components/topic/topic-question-form';
 import { Button } from '~/components/ui/button';
 import { getTopicById } from '~/lib/queries/topic';
 
@@ -19,7 +20,7 @@ export default async function TopicDetailPage({
   if (topic === null) notFound();
 
   return (
-    <Container>
+    <Container className="p-0">
       <DetailHeader
         title={topic.title}
         subtitle={topic.subject.title}
@@ -41,7 +42,7 @@ export default async function TopicDetailPage({
         </Button>
       </DetailHeader>
 
-      <div className="p-3" />
+      <TopicQuestionForm subjectId={topic.subject.id} topicId={topic.id} />
     </Container>
   );
 }
