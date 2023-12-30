@@ -10,7 +10,7 @@ export const createTopicSchema = z.object({
     .max(64, { message: 'Maximum title length is 64 characters' }),
 });
 
-export const submitTopicQuestionSchema = z.object({
+export const submitTopicAnswerSchema = z.object({
   topic: z
     .string({ required_error: 'Topic is required' })
     .min(1, { message: 'Topic is required' }),

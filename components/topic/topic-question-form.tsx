@@ -10,11 +10,11 @@ import { Question } from '~/components/question';
 import { SubmitButton } from '~/components/submit-button';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
-import { submitTopicQuestion } from '~/lib/actions/topic';
-import { submitTopicQuestionSchema } from '~/lib/schema/topic';
+import { submitTopicAnswer } from '~/lib/actions/topic';
+import { submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ActionState } from '~/lib/types/action';
 
-const initialState: ActionState<typeof submitTopicQuestionSchema> = {
+const initialState: ActionState<typeof submitTopicAnswerSchema> = {
   message: null,
   error: null,
   validationErrors: null,
@@ -29,7 +29,7 @@ export function TopicQuestionForm({
   topicId,
   subjectId,
 }: TopicQuestionFormProps) {
-  const [state, formAction] = useFormState(submitTopicQuestion, initialState);
+  const [state, formAction] = useFormState(submitTopicAnswer, initialState);
 
   return (
     <form action={formAction} className="px-3 py-4">

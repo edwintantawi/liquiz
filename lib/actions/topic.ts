@@ -4,10 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import {
-  createTopicSchema,
-  submitTopicQuestionSchema,
-} from '~/lib/schema/topic';
+import { createTopicSchema, submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
 
 export const createTopic: ServerAction<typeof createTopicSchema> = async (
@@ -80,8 +77,8 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   redirect(`/topics/${topicId}`);
 };
 
-export const submitTopicQuestion: ServerAction<
-  typeof submitTopicQuestionSchema
+export const submitTopicAnswer: ServerAction<
+  typeof submitTopicAnswerSchema
 > = async (_, formData) => {
   const rawFormData = Object.fromEntries(formData.entries());
 
