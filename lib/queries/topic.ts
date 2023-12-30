@@ -79,3 +79,31 @@ export async function getLatestTopics({
     };
   });
 }
+
+export async function getTopicById(id: string): Promise<Topic | null> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topic = await database.topic.findUnique({
+    include: { subject: true },
+    where: { id, subject: { userId: session.user.id } },
+  });
+
+  if (topic === null) return null;
+
+  return {
+    id: topic.id,
+    title: topic.title,
+    subjectId: topic.subjectId,
+    createdAt: topic.createdAt,
+    updatedAt: topic.updatedAt,
+    subject: {
+      id: topic.subject.id,
+      title: topic.subject.title,
+      color: getRandomColor(topic.subject.id),
+    },
+  };
+}
