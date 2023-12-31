@@ -46,7 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Subjects      Subject[]
+  subjects      Subject[]
 
   @@map("users")
 }
@@ -69,8 +69,8 @@ model Subject {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Documents   Document[]
-  Topics      Topic[]
+  documents   Document[]
+  topics      Topic[]
 
   @@map("subjects")
 }
