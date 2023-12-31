@@ -1,15 +1,18 @@
+import * as React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
 import { Section } from '~/components/section';
-import { CreateTopicButton } from '~/components/topic/create-topic-button';
-import { TopicItem } from '~/components/topic/topic-item';
+import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
+import { TopicSubjectList } from '~/components/topic/topic-subject-list';
+import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 import { getSubjectById } from '~/lib/queries/subject';
-import { getAllTopicBySubjectId } from '~/lib/queries/topic';
 
 interface SubjectDetailPageProps {
   params: { subject_id: string };
@@ -18,10 +21,7 @@ interface SubjectDetailPageProps {
 export default async function SubjectDetailPage({
   params,
 }: SubjectDetailPageProps) {
-  const [subject, topics] = await Promise.all([
-    getSubjectById(params.subject_id),
-    getAllTopicBySubjectId(params.subject_id),
-  ]);
+  const subject = await getSubjectById(params.subject_id);
 
   if (subject === null) notFound();
 
@@ -33,7 +33,8 @@ export default async function SubjectDetailPage({
         color={subject.color}
         startAdornment={
           <span className="rounded-full border bg-muted px-3 py-0.5 text-[0.60rem] text-muted-foreground">
-            {topics.length} {topics.length <= 1 ? 'Topic' : 'Topics'}
+            {subject.numberOfTopics}{' '}
+            {subject.numberOfTopics <= 1 ? 'Topic' : 'Topics'}
           </span>
         }
       >
@@ -59,7 +60,7 @@ export default async function SubjectDetailPage({
 
       <div className="p-3">
         <Section
-          title={`Topics (${topics.length})`}
+          title={`Topics (${subject.numberOfTopics})`}
           description="List of topics that you have created"
           endAdornment={
             <Button asChild variant="outline" size="icon">
@@ -75,22 +76,21 @@ export default async function SubjectDetailPage({
             </Button>
           }
         >
-          <ul className="grid gap-2">
-            {topics.map((topic) => {
-              return (
-                <li key={topic.id}>
-                  <TopicItem
-                    id={topic.id}
-                    title={topic.title}
-                    subject={topic.subject}
-                  />
-                </li>
-              );
-            })}
-            <li>
-              <CreateTopicButton subjectId={subject.id} />
-            </li>
-          </ul>
+          <ErrorBoundary
+            fallback={
+              <Alert variant="destructive">
+                <Icons.Error size={20} />
+                <AlertTitle>Something went wrong</AlertTitle>
+                <AlertDescription>
+                  Failed to request your {subject.title} subject topics
+                </AlertDescription>
+              </Alert>
+            }
+          >
+            <React.Suspense fallback={<TopicListSkeleton count={8} />}>
+              <TopicSubjectList subjectId={params.subject_id} />
+            </React.Suspense>
+          </ErrorBoundary>
         </Section>
       </div>
     </Container>
