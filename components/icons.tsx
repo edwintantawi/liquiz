@@ -16,6 +16,7 @@ import {
   SearchIcon,
   ShieldXIcon,
   StarIcon,
+  TargetIcon,
   XIcon,
 } from 'lucide-react';
 
@@ -38,4 +39,5 @@ export const Icons = {
   File: FileIcon,
   ExternalLink: ExternalLinkIcon,
   AddTopic: BookmarkPlusIcon,
+  Retake: TargetIcon,
 };

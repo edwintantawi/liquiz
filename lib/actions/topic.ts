@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { createTopicSchema } from '~/lib/schema/topic';
+import { createTopicSchema, submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
 
 export const createTopic: ServerAction<typeof createTopicSchema> = async (
@@ -75,4 +75,35 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   }
 
   redirect(`/topics/${topicId}`);
+};
+
+export const submitTopicAnswer: ServerAction<
+  typeof submitTopicAnswerSchema
+> = async (_, formData) => {
+  const rawFormData = Object.fromEntries(formData.entries());
+
+  const answers = [];
+  for (const [key, value] of Object.entries(rawFormData)) {
+    if (!key.startsWith('question.')) continue;
+
+    answers.push({
+      question: key.replace('question.', ''),
+      option: value,
+    });
+  }
+
+  const formatedFormData = {
+    topic: rawFormData.topic,
+    answers,
+  };
+
+  console.log(formatedFormData);
+
+  // TODO: validate formatedFormData
+
+  return {
+    error: null,
+    message: JSON.stringify(formatedFormData, null, 2),
+    validationErrors: null,
+  };
 };

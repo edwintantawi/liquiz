@@ -30,6 +30,7 @@ export async function getLatestSubjects({
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user?.id },
+    include: { _count: { select: { topics: true } } },
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
@@ -44,7 +45,7 @@ export async function getLatestSubjects({
       createdAt: subject.createdAt,
       updatedAt: subject.updatedAt,
       color: getRandomColor(subject.id),
-      numberOfTopics: 0,
+      numberOfTopics: subject._count.topics,
     };
   });
 }
@@ -58,6 +59,7 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
 
   const subject = await database.subject.findUnique({
     where: { id, userId: session.user.id },
+    include: { _count: { select: { topics: true } } },
   });
 
   if (subject === null) return null;
@@ -71,7 +73,7 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
     createdAt: subject.createdAt,
     updatedAt: subject.updatedAt,
     color: getRandomColor(subject.id),
-    numberOfTopics: 0,
+    numberOfTopics: subject._count.topics,
   };
 }
 
@@ -84,6 +86,7 @@ export async function getAllSubjects(): Promise<Subject[]> {
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user.id },
+    include: { _count: { select: { topics: true } } },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -97,7 +100,7 @@ export async function getAllSubjects(): Promise<Subject[]> {
       createdAt: subject.createdAt,
       updatedAt: subject.updatedAt,
       color: getRandomColor(subject.id),
-      numberOfTopics: 0,
+      numberOfTopics: subject._count.topics,
     };
   });
 }
