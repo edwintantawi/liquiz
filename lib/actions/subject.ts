@@ -54,7 +54,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
         return database.document.create({
           data: {
             subjectId: id,
-            content: content.pageContent,
+            content: content.pageContent.replaceAll('\u0000', ''),
             metadata: content.metadata,
           },
         });
