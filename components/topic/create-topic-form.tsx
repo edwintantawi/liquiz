@@ -53,6 +53,11 @@ export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
                 {subject.title}
               </SelectItem>
             ))}
+            {subjects.length === 0 && (
+              <SelectItem value="null" disabled>
+                No subjects found
+              </SelectItem>
+            )}
           </SelectContent>
         </Select>
         <InputMessage>{state?.validationErrors?.subject?.[0]}</InputMessage>
