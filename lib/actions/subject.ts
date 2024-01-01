@@ -48,21 +48,25 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
         rawFile: validatedForm.data.document.name,
       },
     });
-    subjectId = id;
 
-    await vectorStore.addModels(
-      await database.$transaction(
-        chunks.map((content) =>
-          database.document.create({
-            data: {
-              subjectId: id,
-              content: content.pageContent.replaceAll('\u0000', ''),
-              metadata: content.metadata,
-            },
-          })
-        )
-      )
-    );
+    try {
+      const documents = chunks.map((content) => {
+        return database.document.create({
+          data: {
+            subjectId: id,
+            content: content.pageContent.replaceAll('\u0000', ''),
+            metadata: content.metadata,
+          },
+        });
+      });
+      const models = await database.$transaction(documents);
+      await vectorStore.addModels(models);
+
+      subjectId = id;
+    } catch (error) {
+      await database.subject.delete({ where: { id } });
+      throw error;
+    }
   } catch (error) {
     console.error(error);
     return {
