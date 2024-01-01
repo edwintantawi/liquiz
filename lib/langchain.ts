@@ -6,13 +6,14 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 
 import { database } from '~/lib/database';
+import { env } from '~/lib/env.mjs';
 
 export const llm = new OpenAI({
   // MODEL            : gpt-3.5-turbo-1106
   // CONTEXT WINDOW   : 16,385 tokens
   // MAX OUTPUT       : 4,096 tokens
   modelName: 'gpt-3.5-turbo-1106',
-  openAIApiKey: process.env.OPENAI_API_KEY,
+  openAIApiKey: env.OPENAI_API_KEY,
   temperature: 1,
 });
 

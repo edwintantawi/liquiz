@@ -10,7 +10,7 @@ import { Input, InputMessage } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { createSubject } from '~/lib/actions/subject';
 import { createSubjectSchema } from '~/lib/schema/subject';
-import { ActionState } from '~/lib/types';
+import { ActionState } from '~/lib/types/action';
 
 const initialState: ActionState<typeof createSubjectSchema> = {
   message: null,

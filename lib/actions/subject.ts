@@ -6,7 +6,7 @@ import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { loadPdfDocument, splitter, vectorStore } from '~/lib/langchain';
 import { createSubjectSchema } from '~/lib/schema/subject';
-import { ServerAction } from '~/lib/types';
+import { ServerAction } from '~/lib/types/action';
 
 export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   _,
@@ -67,7 +67,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
     console.error(error);
     return {
       validationErrors: null,
-      error: 'Fail to store new subject',
+      error: 'Failed to store new subject',
       message: null,
     };
   }

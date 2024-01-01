@@ -1,6 +1,7 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { Subject } from '~/lib/entities/subject';
+import { Subject } from '~/lib/types/subject';
+import { getRandomColor } from '~/lib/utils';
 
 export async function getSubjectsCount() {
   const session = await auth();
@@ -29,18 +30,23 @@ export async function getLatestSubjects({
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user?.id },
+    include: { _count: { select: { topics: true } } },
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
 
   return subjects.map((subject) => {
-    return new Subject({
+    return {
       id: subject.id,
+      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      numberOfTopics: 0,
       rawFile: subject.rawFile,
-    });
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
+      color: getRandomColor(subject.id),
+      numberOfTopics: subject._count.topics,
+    };
   });
 }
 
@@ -53,17 +59,22 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
 
   const subject = await database.subject.findUnique({
     where: { id, userId: session.user.id },
+    include: { _count: { select: { topics: true } } },
   });
 
   if (subject === null) return null;
 
-  return new Subject({
+  return {
     id: subject.id,
+    userId: subject.userId,
     title: subject.title,
     description: subject.description,
-    numberOfTopics: 0,
     rawFile: subject.rawFile,
-  });
+    createdAt: subject.createdAt,
+    updatedAt: subject.updatedAt,
+    color: getRandomColor(subject.id),
+    numberOfTopics: subject._count.topics,
+  };
 }
 
 export async function getAllSubjects(): Promise<Subject[]> {
@@ -75,16 +86,21 @@ export async function getAllSubjects(): Promise<Subject[]> {
 
   const subjects = await database.subject.findMany({
     where: { userId: session.user.id },
+    include: { _count: { select: { topics: true } } },
     orderBy: { createdAt: 'desc' },
   });
 
   return subjects.map((subject) => {
-    return new Subject({
+    return {
       id: subject.id,
+      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      numberOfTopics: 0,
       rawFile: subject.rawFile,
-    });
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
+      color: getRandomColor(subject.id),
+      numberOfTopics: subject._count.topics,
+    };
   });
 }

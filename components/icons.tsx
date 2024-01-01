@@ -3,6 +3,7 @@ import {
   ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
+  BookmarkPlusIcon,
   BookPlusIcon,
   ChevronRightIcon,
   DropletsIcon,
@@ -15,6 +16,7 @@ import {
   SearchIcon,
   ShieldXIcon,
   StarIcon,
+  TargetIcon,
   XIcon,
 } from 'lucide-react';
 
@@ -36,4 +38,6 @@ export const Icons = {
   Back: ArrowLeftIcon,
   File: FileIcon,
   ExternalLink: ExternalLinkIcon,
+  AddTopic: BookmarkPlusIcon,
+  Retake: TargetIcon,
 };

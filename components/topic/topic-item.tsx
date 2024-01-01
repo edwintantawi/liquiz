@@ -4,30 +4,25 @@ import Link from 'next/link';
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
+import { cn } from '~/lib/utils';
 
 interface TopicItemProps {
   id: string;
   title: string;
-  score: number;
   subject: {
     id: string;
     title: string;
-    colorCode: string;
+    color: string;
   };
 }
 
-export function TopicItem({ id, title, score, subject }: TopicItemProps) {
+export function TopicItem({ id, title, subject }: TopicItemProps) {
   return (
     <article
       key={id}
       className="relative grid grid-cols-[auto,1fr,auto] items-center gap-2 rounded-md border p-2 hover:ring-2 hover:ring-ring hover:ring-offset-2"
     >
-      <div
-        className="flex h-10 w-10 items-center justify-center rounded-sm text-xs text-white"
-        style={{ backgroundColor: subject.colorCode }}
-      >
-        <span>{score}%</span>
-      </div>
+      <div className={cn('h-10 w-10 rounded-sm', subject.color)} />
       <header>
         <p className="text-xs text-muted-foreground">{subject.title}</p>
         <h3 className="truncate text-sm font-semibold">

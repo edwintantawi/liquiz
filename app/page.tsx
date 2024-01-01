@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { SignInButton } from '~/components/auth';
+import { Container } from '~/components/container';
 import { auth } from '~/lib/auth';
 
 export default async function RootPage() {
@@ -9,7 +10,7 @@ export default async function RootPage() {
   if (isAuthenticated) redirect('/dashboard');
 
   return (
-    <div className="my-auto">
+    <Container>
       <header className="py-6">
         <h1 className="mb-2 text-center text-3xl font-bold">
           AI-Powered Practice Question Generator
@@ -23,6 +24,6 @@ export default async function RootPage() {
           <SignInButton>Getting started</SignInButton>
         </div>
       </header>
-    </div>
+    </Container>
   );
 }

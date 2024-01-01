@@ -1,70 +1,139 @@
-import { delay } from '~/lib/utils';
+import { auth } from '~/lib/auth';
+import { database } from '~/lib/database';
+import { Topic } from '~/lib/types/topic';
+import { getRandomColor } from '~/lib/utils';
 
 export async function getTopicsCount() {
-  // TODO: fetch data from database
-  await delay(6000);
-  return 23;
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const count = await database.topic.count({
+    where: { subject: { userId: session.user.id } },
+  });
+
+  return count;
 }
 
-type Topic = {
-  id: string;
-  title: string;
-  score: number;
-  subject: {
-    id: string;
-    title: string;
-    colorCode: string;
-  };
-};
+export async function getAllTopics(): Promise<Topic[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topics = await database.topic.findMany({
+    where: { subject: { userId: session.user.id } },
+    include: { subject: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return topics.map((topic) => {
+    return {
+      id: topic.id,
+      title: topic.title,
+      subjectId: topic.subjectId,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
+      subject: {
+        id: topic.subject.id,
+        title: topic.subject.title,
+        color: getRandomColor(topic.subject.id),
+      },
+    };
+  });
+}
 
 export async function getLatestTopics({
   limit,
 }: {
   limit: number;
 }): Promise<Topic[]> {
-  // TODO: fetch data from database
-  await delay(4000);
+  const session = await auth();
 
-  return [
-    {
-      id: '1',
-      title: 'Central Processing Unit',
-      score: 80,
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topics = await database.topic.findMany({
+    where: { subject: { userId: session.user.id } },
+    include: { subject: true },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+  });
+
+  return topics.map((topic) => {
+    return {
+      id: topic.id,
+      title: topic.title,
+      subjectId: topic.subjectId,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
       subject: {
-        id: '1',
-        title: 'Computer Science',
-        colorCode: '#ED3030',
+        id: topic.subject.id,
+        title: topic.subject.title,
+        color: getRandomColor(topic.subject.id),
       },
+    };
+  });
+}
+
+export async function getTopicById(id: string): Promise<Topic | null> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topic = await database.topic.findUnique({
+    include: { subject: true },
+    where: { id, subject: { userId: session.user.id } },
+  });
+
+  if (topic === null) return null;
+
+  return {
+    id: topic.id,
+    title: topic.title,
+    subjectId: topic.subjectId,
+    createdAt: topic.createdAt,
+    updatedAt: topic.updatedAt,
+    subject: {
+      id: topic.subject.id,
+      title: topic.subject.title,
+      color: getRandomColor(topic.subject.id),
     },
-    {
-      id: '2',
-      title: 'HTTP Protocol',
-      score: 90,
+  };
+}
+
+export async function getAllTopicBySubjectId(
+  subjectId: string
+): Promise<Topic[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const topics = await database.topic.findMany({
+    include: { subject: true },
+    where: { subject: { id: subjectId, userId: session.user.id } },
+  });
+
+  return topics.map((topic) => {
+    return {
+      id: topic.id,
+      title: topic.title,
+      subjectId: topic.subjectId,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
       subject: {
-        id: '1',
-        title: 'Computer Science',
-        colorCode: '#ED3030',
+        id: topic.subject.id,
+        title: topic.subject.title,
+        color: getRandomColor(topic.subject.id),
       },
-    },
-    {
-      id: '3',
-      title: 'Browser APIs',
-      score: 82,
-      subject: {
-        id: '5',
-        title: 'Javascript',
-        colorCode: '#EE209B',
-      },
-    },
-    {
-      id: '4',
-      title: 'State Law',
-      score: 20,
-      subject: {
-        id: '3',
-        title: 'Citizenship',
-        colorCode: '#3ED0B6',
-      },
-    },
-  ].slice(0, limit);
+    };
+  });
 }

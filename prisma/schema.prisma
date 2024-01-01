@@ -46,7 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Subjects      Subject[]
+  subjects      Subject[]
 
   @@map("users")
 }
@@ -69,7 +69,8 @@ model Subject {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Documents   Document[]
+  documents   Document[]
+  topics      Topic[]
 
   @@map("subjects")
 }
@@ -83,4 +84,15 @@ model Document {
   subject   Subject                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@map("documents")
+}
+
+model Topic {
+  id        String   @id @default(uuid())
+  subjectId String   @map("subject_id")
+  title     String   @db.VarChar(64)
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("topics")
 }
