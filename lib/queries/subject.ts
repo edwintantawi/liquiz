@@ -1,5 +1,6 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { subjectFileStorage } from '~/lib/storage';
 import { Subject } from '~/lib/types/subject';
 import { getRandomColor } from '~/lib/utils';
 
@@ -21,7 +22,7 @@ export async function getLatestSubjects({
   limit,
 }: {
   limit: number;
-}): Promise<Subject[]> {
+}): Promise<Omit<Subject, 'fileUrl'>[]> {
   const session = await auth();
 
   if (!session.isAuthenticated) {
@@ -38,14 +39,12 @@ export async function getLatestSubjects({
   return subjects.map((subject) => {
     return {
       id: subject.id,
-      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      file: subject.file,
-      createdAt: subject.createdAt,
-      updatedAt: subject.updatedAt,
       color: getRandomColor(subject.id),
       numberOfTopics: subject._count.topics,
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
     };
   });
 }
@@ -66,18 +65,17 @@ export async function getSubjectById(id: string): Promise<Subject | null> {
 
   return {
     id: subject.id,
-    userId: subject.userId,
     title: subject.title,
     description: subject.description,
-    file: subject.file,
+    color: getRandomColor(subject.id),
+    fileUrl: subjectFileStorage.getPublicUrl(subject.file),
+    numberOfTopics: subject._count.topics,
     createdAt: subject.createdAt,
     updatedAt: subject.updatedAt,
-    color: getRandomColor(subject.id),
-    numberOfTopics: subject._count.topics,
   };
 }
 
-export async function getAllSubjects(): Promise<Subject[]> {
+export async function getAllSubjects(): Promise<Omit<Subject, 'fileUrl'>[]> {
   const session = await auth();
 
   if (!session.isAuthenticated) {
@@ -93,14 +91,12 @@ export async function getAllSubjects(): Promise<Subject[]> {
   return subjects.map((subject) => {
     return {
       id: subject.id,
-      userId: subject.userId,
       title: subject.title,
       description: subject.description,
-      file: subject.file,
-      createdAt: subject.createdAt,
-      updatedAt: subject.updatedAt,
       color: getRandomColor(subject.id),
       numberOfTopics: subject._count.topics,
+      createdAt: subject.createdAt,
+      updatedAt: subject.updatedAt,
     };
   });
 }
