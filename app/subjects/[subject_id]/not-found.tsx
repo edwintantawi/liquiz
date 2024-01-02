@@ -1,18 +1,18 @@
 import Link from 'next/link';
 
+import { Caution } from '~/components/caution';
 import { Button } from '~/components/ui/button';
 
 export default function NotFoundSubject() {
   return (
-    <div className="flex flex-col items-center py-6">
-      <span className="font-mono text-5xl font-bold">404</span>
-      <h1 className="font-mono text-xl font-bold">Subject Not Found</h1>
-      <p className="mb-5 text-sm text-muted-foreground">
-        Could not find requested subject
-      </p>
+    <Caution
+      code="404"
+      title="Subject Not Found"
+      description="Could not find requested subject"
+    >
       <Button asChild>
         <Link href="/subjects">View all subjects</Link>
       </Button>
-    </div>
+    </Caution>
   );
 }
