@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Container } from '~/components/container';
+import { Caution } from '~/components/caution';
 import { Button } from '~/components/ui/button';
 
 export default function RootError({
@@ -17,13 +17,12 @@ export default function RootError({
   }, [error]);
 
   return (
-    <Container className="flex flex-col items-center py-6 text-center">
-      <span className="font-mono text-5xl font-bold">500</span>
-      <h1 className="font-mono text-xl font-bold">Something went wrong!</h1>
-      <p className="mb-5 text-sm text-muted-foreground">
-        Unable to process the request
-      </p>
+    <Caution
+      code="500"
+      title="Something went wrong!"
+      description="Unable to process the request"
+    >
       <Button onClick={reset}>Try Again</Button>
-    </Container>
+    </Caution>
   );
 }
