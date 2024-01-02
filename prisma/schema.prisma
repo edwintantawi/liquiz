@@ -87,12 +87,35 @@ model Document {
 }
 
 model Topic {
-  id        String   @id @default(uuid())
-  subjectId String   @map("subject_id")
-  title     String   @db.VarChar(64)
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                String     @id @default(uuid())
+  subjectId         String     @map("subject_id")
+  title             String     @db.VarChar(64)
+  numberOfQuestions Int        @map("number_of_questions")
+  subject           Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  Question          Question[]
 
   @@map("topics")
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  topicId   String   @map("topic_id")
+  statement String
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  option    Option[]
+
+  @@map("questions")
+}
+
+model Option {
+  id          String   @id @default(uuid())
+  questionId  String   @map("question_id")
+  statement   String
+  description String
+  isCorrect   Boolean  @map("is_correct")
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("options")
 }
