@@ -45,7 +45,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
         userId: session.user.id,
         title: validatedForm.data.title,
         description: validatedForm.data.description,
-        rawFile: validatedForm.data.document.name,
+        file: validatedForm.data.document.name,
       },
     });
 
