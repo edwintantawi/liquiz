@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Input, InputMessage } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { createSubject } from '~/lib/actions/subject';
-import { createSubjectSchema } from '~/lib/schema/subject';
+import { createSubjectSchema, MAX_FILE_SIZE } from '~/lib/schema/subject';
 import { ActionState } from '~/lib/types/action';
 
 const initialState: ActionState<typeof createSubjectSchema> = {
@@ -40,9 +40,16 @@ export function CreateSubjectForm() {
         <InputMessage>{state?.validationErrors?.description?.[0]}</InputMessage>
       </div>
       <div className="space-y-1">
-        <Label required htmlFor="document">
-          Document
-        </Label>
+        <div>
+          <Label required htmlFor="document">
+            Document
+          </Label>
+          <InputMessage className="text-muted-foreground">
+            Should be in <code className="font-semibold">PDF</code> format and
+            have a maximum size of{' '}
+            <code className="font-semibold">{MAX_FILE_SIZE}MB</code>.
+          </InputMessage>
+        </div>
         <Input
           id="document"
           type="file"

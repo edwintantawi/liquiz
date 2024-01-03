@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
+export const MAX_FILE_SIZE = 30;
+
 const TO_BYTES = 20;
-const MAX_FILE_SIZE = 30;
 const MAX_FILE_SIZE_IN_BYTES = MAX_FILE_SIZE << TO_BYTES;
 
 export const createSubjectSchema = z.object({
@@ -21,6 +22,6 @@ export const createSubjectSchema = z.object({
       message: 'Document must be in .pdf format',
     })
     .refine((file) => file.size < MAX_FILE_SIZE_IN_BYTES, {
-      message: `Document must be smaller than ${MAX_FILE_SIZE} MB`,
+      message: `Document size must be ${MAX_FILE_SIZE}MB or smaller.`,
     }),
 });
