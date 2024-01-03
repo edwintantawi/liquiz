@@ -3,8 +3,11 @@ export interface Subject {
   title: string;
   description: string;
   color: string;
-  fileUrl: string;
   numberOfTopics: number;
+}
+
+export interface SubjectDetail extends Subject {
+  fileUrl: string;
   createdAt: Date;
   updatedAt: Date;
 }
