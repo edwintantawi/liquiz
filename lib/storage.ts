@@ -2,6 +2,7 @@ import { Storage as GoogleCloudStorage } from '@google-cloud/storage';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
+import { getGCPCredentials } from '~/lib/credentials';
 import { env } from '~/lib/env.mjs';
 
 class Storage {
@@ -9,7 +10,7 @@ class Storage {
   public bucketName: string;
 
   constructor({ bucketName }: { bucketName: string }) {
-    this.storage = new GoogleCloudStorage();
+    this.storage = new GoogleCloudStorage(getGCPCredentials());
     this.bucketName = bucketName;
   }
 
