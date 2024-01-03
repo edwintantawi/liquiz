@@ -1,6 +1,10 @@
-import { Subject as SubjectSchema } from '@prisma/client';
-
-export interface Subject extends SubjectSchema {
-  numberOfTopics: number;
+export interface Subject {
+  id: string;
+  title: string;
+  description: string;
   color: string;
+  fileUrl: string;
+  numberOfTopics: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

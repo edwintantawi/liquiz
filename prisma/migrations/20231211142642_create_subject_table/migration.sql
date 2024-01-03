@@ -4,7 +4,7 @@ CREATE TABLE "subjects" (
     "user_id" TEXT NOT NULL,
     "title" VARCHAR(64) NOT NULL,
     "description" VARCHAR(100) NOT NULL,
-    "raw_file" TEXT NOT NULL,
+    "file" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

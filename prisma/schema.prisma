@@ -65,7 +65,7 @@ model Subject {
   userId      String     @map("user_id")
   title       String     @db.VarChar(64)
   description String     @db.VarChar(100)
-  rawFile     String     @map("raw_file")
+  file        String     @map("file")
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
