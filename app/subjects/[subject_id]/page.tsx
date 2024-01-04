@@ -48,13 +48,13 @@ export default async function SubjectDetailPage({
           asChild
           className="grid w-full grid-cols-[1fr,auto] justify-between"
         >
-          <Link href="#">
+          <a href={subject.fileUrl} target="_blank">
             <div className="flex items-center gap-2 truncate">
               <Icons.File size={20} className="shrink-0" />
               <span className="truncate">Document file</span>
             </div>
             <Icons.ExternalLink size={20} className="shrink-0" />
-          </Link>
+          </a>
         </Button>
       </DetailHeader>
 
