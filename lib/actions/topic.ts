@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { tasksQueue } from '~/lib/queue';
 import { createTopicSchema, submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
 
@@ -78,6 +79,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
 
     // TODO: call LLM to create questions from the topic
     //       publish message to queue or perform the action directly
+    await tasksQueue.publish({ subjectId: subject.id, topicId: topic.id });
   } catch (error) {
     console.error(error);
     return {
