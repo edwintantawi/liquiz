@@ -69,6 +69,20 @@ export function CreateTopicForm({ subjects }: CreateTopicFormProps) {
         <Input id="title" name="title" placeholder="Milkyway Galaxy" />
         <InputMessage>{state?.validationErrors?.title?.[0]}</InputMessage>
       </div>
+      <div className="space-y-1">
+        <Label required htmlFor="number-of-questions">
+          Number Of Questions
+        </Label>
+        <Input
+          id="number-of-questions"
+          type="number"
+          name="numberOfQuestions"
+          placeholder="How many questions?"
+        />
+        <InputMessage>
+          {state?.validationErrors?.numberOfQuestions?.[0]}
+        </InputMessage>
+      </div>
 
       {state.error && (
         <Alert variant="destructive">

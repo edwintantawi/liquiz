@@ -32,7 +32,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   }
 
   const subject = await database.subject.findUnique({
-    select: { userId: true },
+    include: { _count: { select: { documents: true } } },
     where: { id: validatedForm.data.subject },
   });
 
@@ -52,6 +52,18 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
     };
   }
 
+  if (validatedForm.data.numberOfQuestions > subject._count.documents) {
+    return {
+      validationErrors: {
+        numberOfQuestions: [
+          `Maximum number of questions for this subject is ${subject._count.documents}`,
+        ],
+      },
+      error: null,
+      message: null,
+    };
+  }
+
   let topicId;
   try {
     const topic = await database.topic.create({
@@ -59,6 +71,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
       data: {
         subjectId: validatedForm.data.subject,
         title: validatedForm.data.title,
+        numberOfQuestions: validatedForm.data.numberOfQuestions,
       },
     });
     topicId = topic.id;
