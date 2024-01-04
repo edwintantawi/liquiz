@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <Container className="flex items-center justify-between gap-2 border-b">
             <div className="flex items-center gap-2">
               <Button asChild size="icon" className="shrink-0">
-                <Link href="/">
+                <Link href="/dashboard">
                   <Icons.Brand className="text-background" />
                   <span className="sr-only">LiQuiz</span>
                 </Link>
