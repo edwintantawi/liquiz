@@ -75,11 +75,15 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
         numberOfQuestions: validatedForm.data.numberOfQuestions,
       },
     });
-    topicId = topic.id;
 
-    // TODO: call LLM to create questions from the topic
-    //       publish message to queue or perform the action directly
-    await tasksQueue.publish({ subjectId: subject.id, topicId: topic.id });
+    try {
+      await tasksQueue.publish({ subjectId: subject.id, topicId: topic.id });
+
+      topicId = topic.id;
+    } catch (error) {
+      await database.topic.delete({ where: { id: topic.id } });
+      throw error;
+    }
   } catch (error) {
     console.error(error);
     return {
