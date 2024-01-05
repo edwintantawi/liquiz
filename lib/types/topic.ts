@@ -11,3 +11,12 @@ export interface TopicDetail extends Topic {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface TopicMessage {
+  subject: { id: string };
+  topic: {
+    id: string;
+    title: string;
+    numberOfQuestions: number;
+  };
+}

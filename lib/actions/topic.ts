@@ -7,6 +7,7 @@ import { database } from '~/lib/database';
 import { tasksQueue } from '~/lib/queue';
 import { createTopicSchema, submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
+import { TopicMessage } from '~/lib/types/topic';
 
 export const createTopic: ServerAction<typeof createTopicSchema> = async (
   _,
@@ -77,7 +78,16 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
     });
 
     try {
-      await tasksQueue.publish({ subjectId: subject.id, topicId: topic.id });
+      const payload: TopicMessage = {
+        subject: { id: subject.id },
+        topic: {
+          id: topic.id,
+          title: validatedForm.data.title,
+          numberOfQuestions: validatedForm.data.numberOfQuestions,
+        },
+      };
+
+      await tasksQueue.publish(payload);
 
       topicId = topic.id;
     } catch (error) {
