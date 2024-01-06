@@ -23,11 +23,11 @@ COPY . .
 # Disable Next.js anonymous telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Disable env validation
+ENV SKIP_ENV_VALIDATION 1
+
 RUN npm run postinstall
 RUN npm run build
-
-# Remove env files
-RUN rm .next/standalone/.env*
 
 FROM base AS runner
 WORKDIR /app
