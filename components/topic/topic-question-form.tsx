@@ -12,6 +12,7 @@ import { Button } from '~/components/ui/button';
 import { submitTopicAnswer } from '~/lib/actions/topic';
 import { submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ActionState } from '~/lib/types/action';
+import { Question as QuestionType } from '~/lib/types/question';
 
 const initialState: ActionState<typeof submitTopicAnswerSchema> = {
   message: null,
@@ -22,11 +23,7 @@ const initialState: ActionState<typeof submitTopicAnswerSchema> = {
 interface TopicQuestionFormProps {
   topicId: string;
   subjectId: string;
-  questions: {
-    id: string;
-    statement: string;
-    options: { id: string; title: string }[];
-  }[];
+  questions: QuestionType[];
 }
 
 export function TopicQuestionForm({
@@ -50,7 +47,7 @@ export function TopicQuestionForm({
                   name={`question.${question.id}`}
                   value={option.id}
                 >
-                  {option.title}
+                  {option.statement}
                 </Question.Option>
               ))}
             </Question>
