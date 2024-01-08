@@ -95,6 +95,7 @@ model Topic {
   createdAt         DateTime   @default(now()) @map("created_at")
   updatedAt         DateTime   @updatedAt @map("updated_at")
   questions         Question[]
+  histories         History[]
 
   @@map("topics")
 }
@@ -105,6 +106,7 @@ model Question {
   statement String
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   options   Option[]
+  choices   Choice[]
 
   @@map("questions")
 }
@@ -116,6 +118,30 @@ model Option {
   description String
   isCorrect   Boolean  @map("is_correct")
   question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  choices     Choice[]
 
   @@map("options")
+}
+
+model Choice {
+  id         String   @id @default(uuid())
+  historyId  String   @map("history_id")
+  questionId String   @map("question_id")
+  optionId   String   @map("option_id")
+  history    History  @relation(fields: [historyId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  option     Option   @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@map("choices")
+}
+
+model History {
+  id        String   @id @default(uuid())
+  topicId   String   @map("topic_id")
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  choices   Choice[]
+
+  @@map("histories")
 }
