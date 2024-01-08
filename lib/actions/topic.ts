@@ -4,8 +4,10 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { tasksQueue } from '~/lib/queue';
 import { createTopicSchema, submitTopicAnswerSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
+import { TopicMessage } from '~/lib/types/topic';
 
 export const createTopic: ServerAction<typeof createTopicSchema> = async (
   _,
@@ -32,7 +34,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   }
 
   const subject = await database.subject.findUnique({
-    select: { userId: true },
+    include: { _count: { select: { documents: true } } },
     where: { id: validatedForm.data.subject },
   });
 
@@ -52,6 +54,18 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
     };
   }
 
+  if (validatedForm.data.numberOfQuestions > subject._count.documents) {
+    return {
+      validationErrors: {
+        numberOfQuestions: [
+          `Maximum number of questions for this subject is ${subject._count.documents}`,
+        ],
+      },
+      error: null,
+      message: null,
+    };
+  }
+
   let topicId;
   try {
     const topic = await database.topic.create({
@@ -59,12 +73,27 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
       data: {
         subjectId: validatedForm.data.subject,
         title: validatedForm.data.title,
+        numberOfQuestions: validatedForm.data.numberOfQuestions,
       },
     });
-    topicId = topic.id;
 
-    // TODO: call LLM to create questions from the topic
-    //       publish message to queue or perform the action directly
+    try {
+      const payload: TopicMessage = {
+        subject: { id: subject.id },
+        topic: {
+          id: topic.id,
+          title: validatedForm.data.title,
+          numberOfQuestions: validatedForm.data.numberOfQuestions,
+        },
+      };
+
+      await tasksQueue.publish(payload);
+
+      topicId = topic.id;
+    } catch (error) {
+      await database.topic.delete({ where: { id: topic.id } });
+      throw error;
+    }
   } catch (error) {
     console.error(error);
     return {
