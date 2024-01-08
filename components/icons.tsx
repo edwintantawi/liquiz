@@ -1,5 +1,6 @@
 import {
   ArrowLeftIcon,
+  ArrowRightIcon,
   ArrowUpIcon,
   BookIcon,
   BookmarkIcon,
@@ -43,4 +44,5 @@ export const Icons = {
   Retake: TargetIcon,
   Correct: CheckIcon,
   Incorrect: XIcon,
+  Next: ArrowRightIcon,
 };

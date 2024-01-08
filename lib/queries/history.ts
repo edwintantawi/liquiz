@@ -1,6 +1,6 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { HistoryDetail } from '~/lib/types/history';
+import { History, HistoryDetail } from '~/lib/types/history';
 import { getRandomColor } from '~/lib/utils';
 
 export async function getHistoryById({
@@ -74,4 +74,25 @@ export async function getHistoryById({
       };
     }),
   };
+}
+
+export async function getHistoriesByTopicId(
+  topicId: string
+): Promise<History[]> {
+  const session = await auth();
+
+  if (!session.isAuthenticated) {
+    throw new Error('UNAUTHENTICATED');
+  }
+
+  const histories = await database.history.findMany({
+    where: { topic: { id: topicId, subject: { userId: session.user.id } } },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return histories.map((history) => ({
+    id: history.id,
+    score: history.score,
+    createdAt: history.createdAt,
+  }));
 }
