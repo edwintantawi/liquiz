@@ -5,6 +5,7 @@ import {
   BookmarkIcon,
   BookmarkPlusIcon,
   BookPlusIcon,
+  CheckIcon,
   ChevronRightIcon,
   DropletsIcon,
   ExternalLinkIcon,
@@ -40,4 +41,6 @@ export const Icons = {
   ExternalLink: ExternalLinkIcon,
   AddTopic: BookmarkPlusIcon,
   Retake: TargetIcon,
+  Correct: CheckIcon,
+  Incorrect: XIcon,
 };

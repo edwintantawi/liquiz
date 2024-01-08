@@ -10,8 +10,23 @@ export interface HistoryDetail extends History {
     title: string;
     numberOfQuestions: number;
     subject: {
+      id: string;
       title: string;
       color: string;
     };
   };
+  questions: {
+    id: string;
+    statement: string;
+    isCorrect: boolean;
+    options: {
+      id: string;
+      statement: string;
+      description: string;
+    }[];
+    choice: {
+      id: string;
+      optionId: string;
+    };
+  }[];
 }
