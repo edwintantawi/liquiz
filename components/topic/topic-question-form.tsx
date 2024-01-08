@@ -9,12 +9,12 @@ import { Question } from '~/components/question';
 import { SubmitButton } from '~/components/submit-button';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
-import { submitTopicAnswer } from '~/lib/actions/topic';
-import { submitTopicAnswerSchema } from '~/lib/schema/topic';
+import { submitQuestionAnswer } from '~/lib/actions/question';
+import { submitQuestionAnswerSchema } from '~/lib/schema/question';
 import { ActionState } from '~/lib/types/action';
 import { Question as QuestionType } from '~/lib/types/question';
 
-const initialState: ActionState<typeof submitTopicAnswerSchema> = {
+const initialState: ActionState<typeof submitQuestionAnswerSchema> = {
   message: null,
   error: null,
   validationErrors: null,
@@ -31,7 +31,7 @@ export function TopicQuestionForm({
   subjectId,
   questions,
 }: TopicQuestionFormProps) {
-  const [state, formAction] = useFormState(submitTopicAnswer, initialState);
+  const [state, formAction] = useFormState(submitQuestionAnswer, initialState);
 
   return (
     <form action={formAction} className="px-3 py-4">
@@ -75,13 +75,6 @@ export function TopicQuestionForm({
 
         <SubmitButton>Submit</SubmitButton>
       </div>
-
-      {/* TODO: remove this code (used for debug) */}
-      {state.message && (
-        <pre className="mt-8 whitespace-pre-wrap rounded-md border bg-muted p-4">
-          <code>{state.message}</code>
-        </pre>
-      )}
     </form>
   );
 }
