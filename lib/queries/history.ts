@@ -33,7 +33,7 @@ export async function getHistoryById({
   if (history === null) return null;
 
   const questions = await database.question.findMany({
-    include: { options: true, choices: true },
+    include: { options: true, choices: { where: { historyId } } },
     where: { topicId: topicId },
   });
 
