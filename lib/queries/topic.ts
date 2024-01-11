@@ -82,7 +82,7 @@ export async function getTopicById(id: string): Promise<TopicDetail | null> {
   }
 
   const topic = await database.topic.findUnique({
-    include: { subject: true },
+    include: { subject: true, _count: { select: { histories: true } } },
     where: { id, subject: { userId: session.user.id } },
   });
 
@@ -92,6 +92,7 @@ export async function getTopicById(id: string): Promise<TopicDetail | null> {
     id: topic.id,
     title: topic.title,
     numberOfQuestions: topic.numberOfQuestions,
+    numberOfHistories: topic._count.histories,
     createdAt: topic.createdAt,
     updatedAt: topic.updatedAt,
     subject: {

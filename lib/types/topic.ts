@@ -8,6 +8,7 @@ export interface Topic {
 
 export interface TopicDetail extends Topic {
   numberOfQuestions: number;
+  numberOfHistories: number;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -23,6 +23,7 @@
     "@google-cloud/pubsub": "^4.1.0",
     "@google-cloud/storage": "^7.7.0",
     "@hookform/resolvers": "^3.3.3",
+    "@nivo/line": "^0.84.0",
     "@prisma/client": "^5.7.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
