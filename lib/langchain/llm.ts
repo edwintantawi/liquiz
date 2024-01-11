@@ -10,7 +10,7 @@ export const llm = new OpenAI({
   // MODEL            : gpt-4-1106-preview
   // CONTEXT WINDOW   : 128,000 tokens
   // MAX OUTPUT       : 4,096 tokens
-  modelName: 'gpt-3.5-turbo-1106',
+  modelName: env.OPENAI_MODEL_NAME,
   openAIApiKey: env.OPENAI_API_KEY,
   temperature: 1,
   verbose: false,
