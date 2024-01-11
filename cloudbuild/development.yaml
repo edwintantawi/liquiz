@@ -50,6 +50,8 @@ steps:
       ]
 images:
   - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/liquiz-dev-database-url/versions/latest
