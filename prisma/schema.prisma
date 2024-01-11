@@ -65,7 +65,7 @@ model Subject {
   userId      String     @map("user_id")
   title       String     @db.VarChar(64)
   description String     @db.VarChar(100)
-  rawFile     String     @map("raw_file")
+  file        String     @map("file")
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -87,12 +87,61 @@ model Document {
 }
 
 model Topic {
-  id        String   @id @default(uuid())
-  subjectId String   @map("subject_id")
-  title     String   @db.VarChar(64)
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                String     @id @default(uuid())
+  subjectId         String     @map("subject_id")
+  title             String     @db.VarChar(64)
+  numberOfQuestions Int        @map("number_of_questions")
+  subject           Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  questions         Question[]
+  histories         History[]
 
   @@map("topics")
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  topicId   String   @map("topic_id")
+  statement String
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  options   Option[]
+  choices   Choice[]
+
+  @@map("questions")
+}
+
+model Option {
+  id          String   @id @default(uuid())
+  questionId  String   @map("question_id")
+  statement   String
+  description String
+  isCorrect   Boolean  @map("is_correct")
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  choices     Choice[]
+
+  @@map("options")
+}
+
+model Choice {
+  id         String   @id @default(uuid())
+  historyId  String   @map("history_id")
+  questionId String   @map("question_id")
+  optionId   String   @map("option_id")
+  history    History  @relation(fields: [historyId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  option     Option   @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@map("choices")
+}
+
+model History {
+  id        String   @id @default(uuid())
+  topicId   String   @map("topic_id")
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  choices   Choice[]
+
+  @@map("histories")
 }

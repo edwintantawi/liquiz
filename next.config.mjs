@@ -7,6 +7,9 @@
 /** @type {import("next").NextConfig} */
 const config = {
   output: 'standalone',
+  experimental: {
+    serverMinification: false,
+  },
 };
 
 export default config;

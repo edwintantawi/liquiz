@@ -4,8 +4,11 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { loadPdfDocument, splitter, vectorStore } from '~/lib/langchain';
+import { loadPdfDocument } from '~/lib/langchain/document-loader';
+import { splitter } from '~/lib/langchain/text-splitter';
+import { vectorStore } from '~/lib/langchain/vector-store';
 import { createSubjectSchema } from '~/lib/schema/subject';
+import { subjectFileStorage } from '~/lib/storage';
 import { ServerAction } from '~/lib/types/action';
 
 export const createSubject: ServerAction<typeof createSubjectSchema> = async (
@@ -33,11 +36,12 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   }
 
   let subjectId;
+  let fileStorageId;
   try {
     const docs = await loadPdfDocument(validatedForm.data.document);
     const chunks = await splitter.splitDocuments(docs);
 
-    // TODO: store pdf file to blob storage, and save the blob id to database
+    fileStorageId = await subjectFileStorage.store(validatedForm.data.document);
 
     const { id } = await database.subject.create({
       select: { id: true },
@@ -45,7 +49,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
         userId: session.user.id,
         title: validatedForm.data.title,
         description: validatedForm.data.description,
-        rawFile: validatedForm.data.document.name,
+        file: fileStorageId,
       },
     });
 
@@ -68,6 +72,8 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
       throw error;
     }
   } catch (error) {
+    await subjectFileStorage.delete(fileStorageId);
+
     console.error(error);
     return {
       validationErrors: null,

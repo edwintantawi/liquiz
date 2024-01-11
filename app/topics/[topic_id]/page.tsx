@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { questions } from '~/app/topics/[topic_id]/data';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
 import { TopicQuestionForm } from '~/components/topic/topic-question-form';
 import { Button } from '~/components/ui/button';
+import { getQuestionsByTopicId } from '~/lib/queries/question';
 import { getTopicById } from '~/lib/queries/topic';
 
 interface TopicDetailPageProps {
@@ -17,6 +17,7 @@ export default async function TopicDetailPage({
   params,
 }: TopicDetailPageProps) {
   const topic = await getTopicById(params.topic_id);
+  const questions = await getQuestionsByTopicId(params.topic_id);
 
   if (topic === null) notFound();
 
