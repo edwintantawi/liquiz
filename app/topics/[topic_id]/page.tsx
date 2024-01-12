@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { TopicDetailProviders } from '~/app/topics/[topic_id]/providers';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
@@ -29,8 +30,8 @@ export default async function TopicDetailPage({
         color={topic.subject.color}
         startAdornment={
           <span className="rounded-full border bg-muted px-3 py-0.5 text-[0.60rem] text-muted-foreground">
-            {questions.length}{' '}
-            {questions.length <= 1 ? 'Question' : 'Questions'}
+            {topic.numberOfQuestions}{' '}
+            {topic.numberOfQuestions <= 1 ? 'Question' : 'Questions'}
           </span>
         }
       >
@@ -50,11 +51,14 @@ export default async function TopicDetailPage({
         </Button>
       </DetailHeader>
 
-      <TopicQuestionForm
-        topicId={topic.id}
-        subjectId={topic.subject.id}
-        questions={questions}
-      />
+      <TopicDetailProviders>
+        <TopicQuestionForm
+          topicId={topic.id}
+          subjectId={topic.subject.id}
+          totalQuestions={topic.numberOfQuestions}
+          questions={questions}
+        />
+      </TopicDetailProviders>
     </Container>
   );
 }
