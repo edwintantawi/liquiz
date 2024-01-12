@@ -6,10 +6,10 @@ import { z } from 'zod';
 
 import { database } from '~/lib/database';
 import { env } from '~/lib/env.mjs';
-import { llm } from '~/lib/langchain/llm';
+import { createLLM } from '~/lib/langchain/llm';
 import { outputParser } from '~/lib/langchain/output-parser';
 import { createQuestionsPrompt } from '~/lib/langchain/prompt-template';
-import { vectorStore } from '~/lib/langchain/vector-store';
+import { createVectorStore } from '~/lib/langchain/vector-store';
 import { TopicMessage } from '~/lib/types/topic';
 
 type Question = z.infer<typeof outputParser.schema>[number];
@@ -28,6 +28,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const llm = createLLM();
+    const vectorStore = createVectorStore();
     const body = await request.json();
     const payload = JSON.parse(
       Buffer.from(body.message.data, 'base64').toString()

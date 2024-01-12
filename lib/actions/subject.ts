@@ -6,10 +6,12 @@ import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { loadPdfDocument } from '~/lib/langchain/document-loader';
 import { splitter } from '~/lib/langchain/text-splitter';
-import { vectorStore } from '~/lib/langchain/vector-store';
+import { createVectorStore } from '~/lib/langchain/vector-store';
 import { createSubjectSchema } from '~/lib/schema/subject';
 import { subjectFileStorage } from '~/lib/storage';
 import { ServerAction } from '~/lib/types/action';
+
+const vectorStore = createVectorStore();
 
 export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   _,
