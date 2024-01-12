@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 
 import { Icons } from '~/components/icons';
-import { Question } from '~/components/question';
+import { Question, QuestionListSkeleton } from '~/components/question';
 import { SubmitButton } from '~/components/submit-button';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
@@ -94,6 +94,10 @@ export function TopicQuestionForm({
             </AlertDescription>
           </Alert>
         )}
+
+        <QuestionListSkeleton
+          count={totalQuestions - numberOfAvailableQuestions}
+        />
       </div>
 
       {state.error && (

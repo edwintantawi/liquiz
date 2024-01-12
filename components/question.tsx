@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Icons } from '~/components/icons';
 import { Label } from '~/components/ui/label';
+import { Skeleton } from '~/components/ui/skeleton';
 import { cn } from '~/lib/utils';
 
 interface QuestionProps {
@@ -91,3 +92,44 @@ Question.Option = function Option({
     </div>
   );
 };
+
+export function OptionSkeleton() {
+  return (
+    <div className="grid grid-cols-[auto,1fr] gap-2">
+      <Skeleton className="size-5 rounded-full" />
+      <Skeleton className="h-5 w-1/2" />
+    </div>
+  );
+}
+
+export function QuestionSkeleton() {
+  return (
+    <div className="grid grid-cols-[auto,1fr] gap-1">
+      <Skeleton className="size-6" />
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-6 w-2/3" />
+        </div>
+
+        <div className="space-y-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <OptionSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function QuestionListSkeleton({ count }: { count: number }) {
+  return (
+    <ul className="space-y-8">
+      {Array.from({ length: count }).map((_, index) => (
+        <li key={index}>
+          <QuestionSkeleton />
+        </li>
+      ))}
+    </ul>
+  );
+}
