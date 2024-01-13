@@ -13,7 +13,7 @@ import { Icons } from '~/components/icons';
 import { Section } from '~/components/section';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
-import { getHistoriesByTopicId } from '~/lib/queries/history';
+import { getHistoriesChartByTopicId } from '~/lib/queries/history';
 import { getTopicById } from '~/lib/queries/topic';
 
 interface TopicHistoriesPageProps {
@@ -24,7 +24,7 @@ export default async function TopicHistoriesPage({
   params,
 }: TopicHistoriesPageProps) {
   const topic = await getTopicById(params.topic_id);
-  const histories = await getHistoriesByTopicId(params.topic_id);
+  const histories = await getHistoriesChartByTopicId(params.topic_id);
 
   if (topic === null) notFound();
 
