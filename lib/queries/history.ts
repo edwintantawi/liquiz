@@ -113,6 +113,7 @@ export async function getHistoriesChartByTopicId(
 
   const histories = await database.history.findMany({
     where: { topic: { id: topicId, subject: { userId: session.user.id } } },
+    include: { topic: { select: { numberOfQuestions: true } } },
     orderBy: { createdAt: 'asc' },
   });
 
@@ -120,5 +121,7 @@ export async function getHistoriesChartByTopicId(
     id: history.id,
     score: history.score,
     createdAt: history.createdAt,
+    numberOfQuestions: history.topic.numberOfQuestions,
+    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
   }));
 }
