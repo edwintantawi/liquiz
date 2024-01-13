@@ -60,7 +60,11 @@ export default async function TopicHistoriesPage({
       </DetailHeader>
 
       <div className="p-3">
-        <HistoryChart histories={histories} color={topic.subject.color} />
+        <HistoryChart
+          histories={histories}
+          color={topic.subject.color}
+          numberOfQuestions={topic.numberOfQuestions}
+        />
 
         <Section
           title={`Histories (${topic.numberOfHistories})`}

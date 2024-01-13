@@ -11,12 +11,18 @@ import { cn, tailwindCssColorToHex } from '~/lib/utils';
 interface HistoryChartProps {
   histories: History[];
   color: string;
+  numberOfQuestions: number;
 }
 
-export function HistoryChart({ histories, color }: HistoryChartProps) {
+export function HistoryChart({
+  histories,
+  color,
+  numberOfQuestions,
+}: HistoryChartProps) {
   const data = histories.map((history) => ({
     x: history.createdAt,
     y: history.score,
+    scoreInPercentage: history.scoreInPercentage,
   }));
 
   const chartColor = tailwindCssColorToHex(color);
@@ -26,7 +32,11 @@ export function HistoryChart({ histories, color }: HistoryChartProps) {
   return (
     <div className="aspect-video w-full">
       {isChartAvailable ? (
-        <Chart color={chartColor} data={data} />
+        <Chart
+          color={chartColor}
+          data={data}
+          numberOfQuestions={numberOfQuestions}
+        />
       ) : (
         <div className="h-full pb-3">
           <Skeleton className="grid h-full w-full place-items-center border border-dashed p-8">
@@ -41,7 +51,15 @@ export function HistoryChart({ histories, color }: HistoryChartProps) {
   );
 }
 
-function Chart({ color, data }: { color: string; data: Datum[] }) {
+function Chart({
+  color,
+  data,
+  numberOfQuestions,
+}: {
+  color: string;
+  data: Datum[];
+  numberOfQuestions: number;
+}) {
   const listOfScore = data.map((value) => Number(value.y));
   const lowScore = Math.min(...listOfScore);
   const highScore = Math.max(...listOfScore);
@@ -59,9 +77,12 @@ function Chart({ color, data }: { color: string; data: Datum[] }) {
       axisRight={null}
       axisBottom={null}
       axisLeft={null}
-      yFormat={(value) =>
-        value === lowScore || value === highScore ? `${value.toString()}%` : ''
-      }
+      yFormat={(value) => {
+        const scoreInPercentage = (Number(value) / numberOfQuestions) * 100;
+        const isLowestOrHighestScore =
+          value === lowScore || value === highScore;
+        return isLowestOrHighestScore ? `${scoreInPercentage}%` : '';
+      }}
       curve="cardinal"
       colors={[color]}
       data={[{ id: 'History', data }]}
@@ -87,13 +108,31 @@ function Chart({ color, data }: { color: string; data: Datum[] }) {
           second: '2-digit',
         })
       }
-      tooltip={({ point }) => <ChartTooltip point={point} data={data} />}
+      tooltip={({ point }) => (
+        <ChartTooltip
+          point={point}
+          data={data}
+          numberOfQuestions={numberOfQuestions}
+        />
+      )}
     />
   );
 }
 
-function ChartTooltip({ point, data }: { point: Point; data: Datum[] }) {
-  const formatedDate = new Date(point.data.x).toLocaleDateString('en-US', {
+function ChartTooltip({
+  point,
+  data,
+  numberOfQuestions,
+}: {
+  point: Point;
+  data: Datum[];
+  numberOfQuestions: number;
+}) {
+  const pointData = data.find((d) => d.x === point.data.x);
+
+  if (!pointData) return null;
+
+  const formatedDate = new Date(pointData.x!).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -115,7 +154,11 @@ function ChartTooltip({ point, data }: { point: Point; data: Datum[] }) {
         <span className="font-semibold">Date:</span> {formatedDate}
       </p>
       <p>
-        <span className="font-semibold">Score:</span> {point.data.y.toString()}%
+        <span className="font-semibold">Score:</span>{' '}
+        {pointData.scoreInPercentage}%
+      </p>
+      <p className="text-muted-foreground">
+        {Number(pointData.y)} of {numberOfQuestions} questions correct
       </p>
     </div>
   );

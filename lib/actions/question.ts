@@ -76,14 +76,11 @@ export const submitQuestionAnswer: ServerAction<
     }
   }
 
-  // score in precentage
-  const score = (numberOfCorrectQuestion / questions.length) * 100;
-
   const history = await database.history.create({
     select: { id: true },
     data: {
       topicId: validatedForm.data.topic,
-      score: score,
+      score: numberOfCorrectQuestion,
       choices: {
         createMany: {
           data: validatedForm.data.answers.map((answer) => ({
