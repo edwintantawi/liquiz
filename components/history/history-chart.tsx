@@ -21,7 +21,7 @@ export function HistoryChart({ histories, color }: HistoryChartProps) {
 
   const chartColor = tailwindCssColorToHex(color);
 
-  const isChartAvailable = data.length > 2;
+  const isChartAvailable = data.length >= 2;
 
   return (
     <div className="aspect-video w-full">
