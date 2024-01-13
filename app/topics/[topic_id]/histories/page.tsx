@@ -51,7 +51,7 @@ export default async function TopicHistoriesPage({
           <Link href={`/topics/${params.topic_id}`}>
             <Icons.Retake size={20} className="shrink-0" />
             <span>
-              {topic.numberOfHistories > 1
+              {topic.numberOfHistories >= 1
                 ? 'Retake the topic'
                 : 'Take the topic'}
             </span>
