@@ -19,12 +19,7 @@ export async function HistoryTopicList({ topicId }: HistoryTopicListProps) {
       {histories.map((history) => {
         return (
           <li key={history.id}>
-            <HistoryItem
-              id={history.id}
-              createdAt={history.createdAt}
-              score={history.score}
-              topicId={topicId}
-            />
+            <HistoryItem topicId={topicId} history={history} />
           </li>
         );
       })}

@@ -41,6 +41,8 @@ export async function getHistoryById({
     id: history.id,
     score: history.score,
     createdAt: history.createdAt,
+    numberOfQuestions: history.topic.numberOfQuestions,
+    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
     topic: {
       id: history.topic.id,
       title: history.topic.title,
@@ -87,6 +89,7 @@ export async function getHistoriesByTopicId(
 
   const histories = await database.history.findMany({
     where: { topic: { id: topicId, subject: { userId: session.user.id } } },
+    include: { topic: { select: { numberOfQuestions: true } } },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -94,6 +97,8 @@ export async function getHistoriesByTopicId(
     id: history.id,
     score: history.score,
     createdAt: history.createdAt,
+    numberOfQuestions: history.topic.numberOfQuestions,
+    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
   }));
 }
 
