@@ -34,6 +34,8 @@ steps:
       - '0'
       - '--max-instances'
       - '1'
+      - '--timeout'
+      - '600'
       - '--set-secrets'
       - 'DATABASE_URL=liquiz-dev-database-url:latest'
       - '--set-secrets'
