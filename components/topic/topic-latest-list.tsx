@@ -1,14 +1,21 @@
-import * as React from 'react';
-
 import { CreateTopicButton } from '~/components/topic/create-topic-button';
 import { TopicItem } from '~/components/topic/topic-item';
+import { TopicListEmpty } from '~/components/topic/topic-list-empty';
 import { getLatestTopics } from '~/lib/queries/topic';
 
 export async function TopicLatestList() {
   const latestTopics = await getLatestTopics({ limit: 5 });
 
+  const isEmpty = latestTopics.length === 0;
+
   return (
     <ul className="space-y-2">
+      {isEmpty && (
+        <li>
+          <TopicListEmpty />
+        </li>
+      )}
+
       {latestTopics.map((topic) => {
         return (
           <li key={topic.id}>

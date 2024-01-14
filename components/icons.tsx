@@ -12,6 +12,7 @@ import {
   ExternalLinkIcon,
   FileIcon,
   HistoryIcon,
+  InfoIcon,
   Loader2Icon,
   MenuIcon,
   PlusIcon,
@@ -45,4 +46,5 @@ export const Icons = {
   Correct: CheckIcon,
   Incorrect: XIcon,
   Next: ArrowRightIcon,
+  Info: InfoIcon,
 };
