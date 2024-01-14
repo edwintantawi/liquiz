@@ -1,10 +1,21 @@
 import { Container } from '~/components/container';
 import { Header } from '~/components/header';
 import { CreateTopicForm } from '~/components/topic/create-topic-form';
+import { getMaxNumberOfQuestionsBySubjectId } from '~/lib/actions/document';
 import { getAllSubjects } from '~/lib/queries/subject';
 
-export default async function CreateTopicPage() {
+interface CreateTopicPageProps {
+  searchParams: { subject_id?: string };
+}
+
+export default async function CreateTopicPage({
+  searchParams,
+}: CreateTopicPageProps) {
   const subjects = await getAllSubjects();
+
+  const maxNumberOfQuestions = await getMaxNumberOfQuestionsBySubjectId(
+    searchParams.subject_id
+  );
 
   return (
     <Container>
@@ -13,7 +24,10 @@ export default async function CreateTopicPage() {
         description="A topic about the questions you want!"
       />
 
-      <CreateTopicForm subjects={subjects} />
+      <CreateTopicForm
+        subjects={subjects}
+        maxNumberOfQuestions={maxNumberOfQuestions}
+      />
     </Container>
   );
 }

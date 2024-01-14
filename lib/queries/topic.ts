@@ -1,6 +1,6 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
-import { Topic } from '~/lib/types/topic';
+import { Topic, TopicDetail } from '~/lib/types/topic';
 import { getRandomColor } from '~/lib/utils';
 
 export async function getTopicsCount() {
@@ -34,9 +34,6 @@ export async function getAllTopics(): Promise<Topic[]> {
     return {
       id: topic.id,
       title: topic.title,
-      subjectId: topic.subjectId,
-      createdAt: topic.createdAt,
-      updatedAt: topic.updatedAt,
       subject: {
         id: topic.subject.id,
         title: topic.subject.title,
@@ -68,9 +65,6 @@ export async function getLatestTopics({
     return {
       id: topic.id,
       title: topic.title,
-      subjectId: topic.subjectId,
-      createdAt: topic.createdAt,
-      updatedAt: topic.updatedAt,
       subject: {
         id: topic.subject.id,
         title: topic.subject.title,
@@ -80,7 +74,7 @@ export async function getLatestTopics({
   });
 }
 
-export async function getTopicById(id: string): Promise<Topic | null> {
+export async function getTopicById(id: string): Promise<TopicDetail | null> {
   const session = await auth();
 
   if (!session.isAuthenticated) {
@@ -88,7 +82,7 @@ export async function getTopicById(id: string): Promise<Topic | null> {
   }
 
   const topic = await database.topic.findUnique({
-    include: { subject: true },
+    include: { subject: true, _count: { select: { histories: true } } },
     where: { id, subject: { userId: session.user.id } },
   });
 
@@ -97,7 +91,8 @@ export async function getTopicById(id: string): Promise<Topic | null> {
   return {
     id: topic.id,
     title: topic.title,
-    subjectId: topic.subjectId,
+    numberOfQuestions: topic.numberOfQuestions,
+    numberOfHistories: topic._count.histories,
     createdAt: topic.createdAt,
     updatedAt: topic.updatedAt,
     subject: {
@@ -126,9 +121,6 @@ export async function getAllTopicBySubjectId(
     return {
       id: topic.id,
       title: topic.title,
-      subjectId: topic.subjectId,
-      createdAt: topic.createdAt,
-      updatedAt: topic.updatedAt,
       subject: {
         id: topic.subject.id,
         title: topic.subject.title,

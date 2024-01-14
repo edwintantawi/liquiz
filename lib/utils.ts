@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import tailwindCssColors from 'tailwindcss/colors';
+import { DefaultColors } from 'tailwindcss/types/generated/colors';
 
 import { colors } from '~/lib/color';
 
@@ -37,4 +39,15 @@ export function getRandomColor(seed: string) {
 
   const index = Math.floor(randomNumber * colors.length);
   return colors[index];
+}
+
+export function tailwindCssColorToHex(tailwindCssColorClass: string) {
+  const [, colorName, colorShade] = tailwindCssColorClass.split('-') as [
+    string,
+    keyof DefaultColors,
+    keyof DefaultColors['amber'],
+  ];
+
+  const hexColor = tailwindCssColors[colorName][colorShade];
+  return hexColor;
 }

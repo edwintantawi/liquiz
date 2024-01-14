@@ -1,0 +1,64 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA',
+      ]
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'liquiz-production'
+      - '--image'
+      - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA'
+      - '--allow-unauthenticated'
+      - '--service-account'
+      - 'liquiz-app@liquiz-app.iam.gserviceaccount.com'
+      - '--region'
+      - 'asia-southeast2'
+      - '--cpu'
+      - '1'
+      - '--memory'
+      - '1G'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '1'
+      - '--timeout'
+      - '600'
+      - '--set-secrets'
+      - 'DATABASE_URL=liquiz-production-database-url:latest'
+      - '--set-secrets'
+      - 'DIRECT_URL=liquiz-production-direct-url:latest'
+      - '--set-secrets'
+      - 'NEXTAUTH_URL=liquiz-production-nextauth-url:latest'
+      - '--set-secrets'
+      - 'NEXTAUTH_SECRET=liquiz-production-nextauth-secret:latest'
+      - '--set-secrets'
+      - 'GOOGLE_OAUTH_CLIENT_ID=liquiz-production-google-oauth-client-id:latest'
+      - '--set-secrets'
+      - 'GOOGLE_OAUTH_CLIENT_SECRET=liquiz-production-google-oauth-client-secret:latest'
+      - '--set-secrets'
+      - 'OPENAI_API_KEY=liquiz-production-openai-api-key:latest'
+      - '--set-secrets'
+      - 'OPENAI_MODEL_NAME=liquiz-production-openai-model-name:latest'
+      - '--set-secrets'
+      - 'GCP_SUBJECT_FILE_BUCKET_NAME=liquiz-production-gcp-subject-file-bucket-name:latest'
+      - '--set-secrets'
+      - 'GCP_PUBSUB_TOPIC_NAME=liquiz-production-gcp-pubsub-topic-name:latest'
+      - '--set-secrets'
+      - 'GCP_PUBSUB_VERIFICATION_TOKEN=liquiz-production-gcp-pubsub-verification-token:latest'
+images:
+  - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -8,16 +8,10 @@ export const createTopicSchema = z.object({
     .string({ required_error: 'Title is required' })
     .min(1, { message: 'Title is required' })
     .max(64, { message: 'Maximum title length is 64 characters' }),
-});
-
-export const submitTopicAnswerSchema = z.object({
-  topic: z
-    .string({ required_error: 'Topic is required' })
-    .min(1, { message: 'Topic is required' }),
-  answers: z.array(
-    z.object({
-      question: z.string({ required_error: 'Question is required' }),
-      option: z.string({ required_error: 'Option required' }),
+  numberOfQuestions: z.coerce
+    .number({
+      required_error: 'Number of questions is required',
+      invalid_type_error: 'Number of questions must be a number',
     })
-  ),
+    .min(1, { message: 'Number of questions must be at least 1' }),
 });

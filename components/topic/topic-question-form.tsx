@@ -4,16 +4,20 @@ import * as React from 'react';
 import { useFormState } from 'react-dom';
 import Link from 'next/link';
 
+import { useQuery } from '@tanstack/react-query';
+
 import { Icons } from '~/components/icons';
-import { Question } from '~/components/question';
+import { Question, QuestionListSkeleton } from '~/components/question';
 import { SubmitButton } from '~/components/submit-button';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
-import { submitTopicAnswer } from '~/lib/actions/topic';
-import { submitTopicAnswerSchema } from '~/lib/schema/topic';
+import { submitQuestionAnswer } from '~/lib/actions/question';
+import { submitQuestionAnswerSchema } from '~/lib/schema/question';
 import { ActionState } from '~/lib/types/action';
+import { Question as QuestionType } from '~/lib/types/question';
+import { cn } from '~/lib/utils';
 
-const initialState: ActionState<typeof submitTopicAnswerSchema> = {
+const initialState: ActionState<typeof submitQuestionAnswerSchema> = {
   message: null,
   error: null,
   validationErrors: null,
@@ -22,41 +26,79 @@ const initialState: ActionState<typeof submitTopicAnswerSchema> = {
 interface TopicQuestionFormProps {
   topicId: string;
   subjectId: string;
-  questions: {
-    id: string;
-    statement: string;
-    options: { id: string; title: string }[];
-  }[];
+  totalQuestions: number;
+  questions: QuestionType[];
 }
 
 export function TopicQuestionForm({
   topicId,
   subjectId,
+  totalQuestions,
   questions,
 }: TopicQuestionFormProps) {
-  const [state, formAction] = useFormState(submitTopicAnswer, initialState);
+  const [state, formAction] = useFormState(submitQuestionAnswer, initialState);
+  const [numberOfAvailableQuestions, setNumberOfAvailableQuestions] =
+    React.useState<number>(questions.length);
+
+  const isQuestionsBeingGenerated = numberOfAvailableQuestions < totalQuestions;
+
+  const { data } = useQuery({
+    queryKey: ['questions', topicId],
+    queryFn: async () => {
+      const response = await fetch(`/api/topics/${topicId}/questions`);
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      const questions = (await response.json()) as QuestionType[];
+      setNumberOfAvailableQuestions(questions.length);
+      return questions;
+    },
+    enabled: isQuestionsBeingGenerated,
+    initialData: questions,
+    refetchInterval: 10_000,
+  });
 
   return (
     <form action={formAction} className="px-3 py-4">
       <input type="hidden" name="topic" value={topicId} />
-      <ul className="mb-6 ml-5 list-decimal space-y-8">
-        {questions.map((question) => (
-          <li key={question.id} className="space-y-3">
-            <Question statement={question.statement}>
-              {question.options.map((option) => (
-                <Question.Option
-                  required
-                  key={option.id}
-                  name={`question.${question.id}`}
-                  value={option.id}
-                >
-                  {option.title}
-                </Question.Option>
-              ))}
-            </Question>
-          </li>
-        ))}
-      </ul>
+      <div className="mb-6">
+        <ul className="ml-5 list-decimal space-y-8">
+          {data.map((question) => (
+            <li key={question.id} className="space-y-3">
+              <Question statement={question.statement}>
+                {question.options.map((option) => (
+                  <Question.Option
+                    required
+                    key={option.id}
+                    name={`question.${question.id}`}
+                    value={option.id}
+                  >
+                    {option.statement}
+                  </Question.Option>
+                ))}
+              </Question>
+            </li>
+          ))}
+        </ul>
+
+        {isQuestionsBeingGenerated && (
+          <Alert
+            className={cn('mb-4', {
+              'mt-4': numberOfAvailableQuestions !== 0,
+            })}
+          >
+            <Icons.Loader size={20} className="animate-spin" />
+            <AlertTitle>Please wait, this will take time 👀</AlertTitle>
+            <AlertDescription className="text-balance">
+              Your question is being generated, it may take a few minutes
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <QuestionListSkeleton
+          count={totalQuestions - numberOfAvailableQuestions}
+        />
+      </div>
 
       {state.error && (
         <Alert variant="destructive">
@@ -76,15 +118,8 @@ export function TopicQuestionForm({
           </Button>
         </div>
 
-        <SubmitButton>Submit</SubmitButton>
+        <SubmitButton disabled={isQuestionsBeingGenerated}>Submit</SubmitButton>
       </div>
-
-      {/* TODO: remove this code (used for debug) */}
-      {state.message && (
-        <pre className="mt-8 whitespace-pre-wrap rounded-md border bg-muted p-4">
-          <code>{state.message}</code>
-        </pre>
-      )}
     </form>
   );
 }
