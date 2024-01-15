@@ -51,3 +51,13 @@ export function tailwindCssColorToHex(tailwindCssColorClass: string) {
   const hexColor = tailwindCssColors[colorName][colorShade];
   return hexColor;
 }
+
+export function scoreToPercentage({
+  score,
+  total,
+}: {
+  score: number;
+  total: number;
+}) {
+  return Math.round((score / total) * 100);
+}

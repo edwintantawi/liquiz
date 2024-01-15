@@ -100,7 +100,7 @@ export function CreateTopicForm({
       <div className="space-y-1">
         <div>
           <Label required htmlFor="number-of-questions">
-            Number Of Questions
+            Number of Questions
           </Label>
           {isSubjectAvailable ? (
             <InputMessage className="text-muted-foreground">

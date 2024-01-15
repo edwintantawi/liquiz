@@ -1,7 +1,7 @@
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { History, HistoryDetail } from '~/lib/types/history';
-import { getRandomColor } from '~/lib/utils';
+import { getRandomColor, scoreToPercentage } from '~/lib/utils';
 
 export async function getHistoryById({
   historyId,
@@ -42,7 +42,10 @@ export async function getHistoryById({
     score: history.score,
     createdAt: history.createdAt,
     numberOfQuestions: history.topic.numberOfQuestions,
-    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
+    scoreInPercentage: scoreToPercentage({
+      score: history.score,
+      total: history.topic.numberOfQuestions,
+    }),
     topic: {
       id: history.topic.id,
       title: history.topic.title,
@@ -98,7 +101,10 @@ export async function getHistoriesByTopicId(
     score: history.score,
     createdAt: history.createdAt,
     numberOfQuestions: history.topic.numberOfQuestions,
-    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
+    scoreInPercentage: scoreToPercentage({
+      score: history.score,
+      total: history.topic.numberOfQuestions,
+    }),
   }));
 }
 
@@ -122,6 +128,9 @@ export async function getHistoriesChartByTopicId(
     score: history.score,
     createdAt: history.createdAt,
     numberOfQuestions: history.topic.numberOfQuestions,
-    scoreInPercentage: (history.score / history.topic.numberOfQuestions) * 100,
+    scoreInPercentage: scoreToPercentage({
+      score: history.score,
+      total: history.topic.numberOfQuestions,
+    }),
   }));
 }
