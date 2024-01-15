@@ -114,7 +114,7 @@ export const deleteSubject: ServerAction<typeof deleteSubjectSchema> = async (
   try {
     const subject = await database.subject.findUnique({
       where: { id: validatedForm.data.subject },
-      select: { userId: true },
+      select: { userId: true, file: true },
     });
 
     if (subject === null) {
@@ -136,6 +136,8 @@ export const deleteSubject: ServerAction<typeof deleteSubjectSchema> = async (
     await database.subject.delete({
       where: { id: validatedForm.data.subject, userId: session.user.id },
     });
+
+    await subjectFileStorage.delete(subject.file);
   } catch (error) {
     console.error(error);
     return {
