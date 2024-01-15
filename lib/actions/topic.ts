@@ -4,10 +4,14 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { createVectorStore } from '~/lib/langchain/vector-store';
 import { tasksQueue } from '~/lib/queue';
 import { createTopicSchema, deleteTopicSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
 import { TopicMessage } from '~/lib/types/topic';
+import { splitIntoParts } from '~/lib/utils';
+
+const vectorStore = createVectorStore();
 
 export const createTopic: ServerAction<typeof createTopicSchema> = async (
   _,
@@ -78,16 +82,36 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
     });
 
     try {
-      const payload: TopicMessage = {
-        subject: { id: subject.id },
-        topic: {
-          id: topic.id,
-          title: validatedForm.data.title,
-          numberOfQuestions: validatedForm.data.numberOfQuestions,
-        },
-      };
+      const similaritySearchResult =
+        await vectorStore.similaritySearchWithScore(
+          validatedForm.data.title,
+          validatedForm.data.numberOfQuestions,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          { subject_id: { equals: subject.id } }
+        );
 
-      await tasksQueue.publish(payload);
+      const parts = splitIntoParts(similaritySearchResult).map((part) => {
+        return part.map(([document]) => document.pageContent);
+      });
+
+      const messages: TopicMessage[] = parts.map((contexts) => {
+        return {
+          subject: { id: subject.id },
+          topic: {
+            id: topic.id,
+            title: validatedForm.data.title,
+            numberOfQuestions: contexts.length,
+          },
+          contexts,
+        };
+      });
+
+      const queuesPromises = messages.map((message) => {
+        return tasksQueue.publish(message);
+      });
+
+      await Promise.all(queuesPromises);
 
       topicId = topic.id;
     } catch (error) {
