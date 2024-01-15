@@ -5,11 +5,13 @@ import { Header } from '~/components/header';
 import { UpdateSubjectForm } from '~/components/subject/update-subject-form';
 import { getSubjectById } from '~/lib/queries/subject';
 
-interface EditDetailPageProps {
+interface EditSubjectPageProps {
   params: { subject_id: string };
 }
 
-export default async function EditSubjectPage({ params }: EditDetailPageProps) {
+export default async function EditSubjectPage({
+  params,
+}: EditSubjectPageProps) {
   const subject = await getSubjectById(params.subject_id);
 
   if (subject === null) notFound();
