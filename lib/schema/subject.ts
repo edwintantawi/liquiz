@@ -31,3 +31,16 @@ export const deleteSubjectSchema = z.object({
     .string({ required_error: 'Subject is required' })
     .min(1, { message: 'Subject is required' }),
 });
+
+export const updateSubjectSchema = createSubjectSchema
+  .pick({
+    title: true,
+    description: true,
+  })
+  .and(
+    z.object({
+      subject: z
+        .string({ required_error: 'Subject is required' })
+        .min(1, { message: 'Subject is required' }),
+    })
+  );

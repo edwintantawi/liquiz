@@ -58,6 +58,13 @@ export default async function SubjectDetailPage({
           </a>
         </Button>
 
+        <Button asChild size="icon" variant="outline" className="shrink-0">
+          <Link href={`/subjects/${subject.id}/edit`}>
+            <Icons.Edit size={20} />
+            <span className="sr-only">Edit subject</span>
+          </Link>
+        </Button>
+
         <SubjectDeleteButton subjectId={subject.id} />
       </DetailHeader>
 
