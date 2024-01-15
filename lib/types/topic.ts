@@ -20,4 +20,5 @@ export interface TopicMessage {
     title: string;
     numberOfQuestions: number;
   };
+  contexts: string[];
 }

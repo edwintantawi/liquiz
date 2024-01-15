@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
+import { Document } from 'langchain/document';
 import { twMerge } from 'tailwind-merge';
 import tailwindCssColors from 'tailwindcss/colors';
 import { DefaultColors } from 'tailwindcss/types/generated/colors';
@@ -50,4 +51,25 @@ export function tailwindCssColorToHex(tailwindCssColorClass: string) {
 
   const hexColor = tailwindCssColors[colorName][colorShade];
   return hexColor;
+}
+
+export function splitIntoParts(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: [Document<Record<string, any>>, number][]
+) {
+  const NUMBER_OF_QUESTIONS_PER_PART = 10;
+
+  return Array.from(
+    {
+      length: Math.ceil(data.length / NUMBER_OF_QUESTIONS_PER_PART),
+    },
+    (_, partIndex) => {
+      return Array.from(
+        { length: NUMBER_OF_QUESTIONS_PER_PART },
+        (_, itemIndex) => {
+          return data[partIndex * NUMBER_OF_QUESTIONS_PER_PART + itemIndex];
+        }
+      ).filter(Boolean);
+    }
+  );
 }
