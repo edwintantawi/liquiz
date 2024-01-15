@@ -7,7 +7,7 @@ import { database } from '~/lib/database';
 import { loadPdfDocument } from '~/lib/langchain/document-loader';
 import { splitter } from '~/lib/langchain/text-splitter';
 import { createVectorStore } from '~/lib/langchain/vector-store';
-import { createSubjectSchema } from '~/lib/schema/subject';
+import { createSubjectSchema, deleteSubjectSchema } from '~/lib/schema/subject';
 import { subjectFileStorage } from '~/lib/storage';
 import { ServerAction } from '~/lib/types/action';
 
@@ -85,4 +85,65 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   }
 
   redirect(`/subjects/${subjectId}`);
+};
+
+export const deleteSubject: ServerAction<typeof deleteSubjectSchema> = async (
+  _,
+  formData
+) => {
+  const validatedForm = deleteSubjectSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!validatedForm.success) {
+    return {
+      validationErrors: validatedForm.error.flatten().fieldErrors,
+      error: null,
+      message: null,
+    };
+  }
+
+  const session = await auth();
+  if (!session.isAuthenticated) {
+    return {
+      validationErrors: null,
+      error: 'User must be authenticated to perform this action',
+      message: null,
+    };
+  }
+
+  try {
+    const subject = await database.subject.findUnique({
+      where: { id: validatedForm.data.subject },
+      select: { userId: true },
+    });
+
+    if (subject === null) {
+      return {
+        validationErrors: null,
+        error: 'Subject not found',
+        message: null,
+      };
+    }
+
+    if (session.user.id !== subject.userId) {
+      return {
+        validationErrors: null,
+        error: 'User must be the owner of the subject to perform this action',
+        message: null,
+      };
+    }
+
+    await database.subject.delete({
+      where: { id: validatedForm.data.subject, userId: session.user.id },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      validationErrors: null,
+      error: 'Failed to delete subject',
+      message: null,
+    };
+  }
+
+  redirect('/subjects');
 };

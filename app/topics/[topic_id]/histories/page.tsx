@@ -47,7 +47,7 @@ export default async function TopicHistoriesPage({
             <span className="sr-only">View ${topic.subject.title} subject</span>
           </Link>
         </Button>
-        <Button asChild className="w-full">
+        <Button asChild className="w-full border border-white">
           <Link href={`/topics/${params.topic_id}`}>
             <Icons.Retake size={20} className="shrink-0" />
             <span>

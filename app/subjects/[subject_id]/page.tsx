@@ -8,6 +8,7 @@ import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
 import { Section } from '~/components/section';
+import { SubjectDeleteButton } from '~/components/subject/subject-delete-button';
 import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
 import { TopicSubjectList } from '~/components/topic/topic-subject-list';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
@@ -46,7 +47,7 @@ export default async function SubjectDetailPage({
         </Button>
         <Button
           asChild
-          className="grid w-full grid-cols-[1fr,auto] justify-between"
+          className="grid w-full grid-cols-[1fr,auto] justify-between border border-white"
         >
           <a href={subject.fileUrl} target="_blank">
             <div className="flex items-center gap-2 truncate">
@@ -56,6 +57,8 @@ export default async function SubjectDetailPage({
             <Icons.ExternalLink size={20} className="shrink-0" />
           </a>
         </Button>
+
+        <SubjectDeleteButton subjectId={subject.id} />
       </DetailHeader>
 
       <div className="p-3">

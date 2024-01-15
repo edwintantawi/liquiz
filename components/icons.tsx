@@ -20,6 +20,7 @@ import {
   ShieldXIcon,
   StarIcon,
   TargetIcon,
+  Trash2Icon,
   XIcon,
 } from 'lucide-react';
 
@@ -47,4 +48,5 @@ export const Icons = {
   Incorrect: XIcon,
   Next: ArrowRightIcon,
   Info: InfoIcon,
+  Delete: Trash2Icon,
 };
