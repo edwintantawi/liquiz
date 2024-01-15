@@ -9,6 +9,7 @@ import {
   CheckIcon,
   ChevronRightIcon,
   DropletsIcon,
+  EditIcon,
   ExternalLinkIcon,
   FileIcon,
   HistoryIcon,
@@ -49,4 +50,5 @@ export const Icons = {
   Next: ArrowRightIcon,
   Info: InfoIcon,
   Delete: Trash2Icon,
+  Edit: EditIcon,
 };
