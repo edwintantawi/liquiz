@@ -5,6 +5,7 @@ import { TopicDetailProviders } from '~/app/topics/[topic_id]/providers';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
+import { TopicDeleteButton } from '~/components/topic/topic-delete-button';
 import { TopicQuestionForm } from '~/components/topic/topic-question-form';
 import { Button } from '~/components/ui/button';
 import { getQuestionsByTopicId } from '~/lib/queries/question';
@@ -43,12 +44,14 @@ export default async function TopicDetailPage({
             </span>
           </Link>
         </Button>
-        <Button asChild className="w-full">
+        <Button asChild className="w-full border border-white">
           <Link href={`/topics/${topic.id}/histories`}>
             <Icons.History size={20} className="shrink-0" />
             <span>Histories</span>
           </Link>
         </Button>
+
+        <TopicDeleteButton topicId={topic.id} />
       </DetailHeader>
 
       <TopicDetailProviders>

@@ -15,3 +15,9 @@ export const createTopicSchema = z.object({
     })
     .min(1, { message: 'Number of questions must be at least 1' }),
 });
+
+export const deleteTopicSchema = z.object({
+  topic: z
+    .string({ required_error: 'Topic is required' })
+    .min(1, { message: 'Topic is required' }),
+});

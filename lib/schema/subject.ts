@@ -25,3 +25,22 @@ export const createSubjectSchema = z.object({
       message: `Document size must be ${MAX_FILE_SIZE}MB or smaller.`,
     }),
 });
+
+export const deleteSubjectSchema = z.object({
+  subject: z
+    .string({ required_error: 'Subject is required' })
+    .min(1, { message: 'Subject is required' }),
+});
+
+export const updateSubjectSchema = createSubjectSchema
+  .pick({
+    title: true,
+    description: true,
+  })
+  .and(
+    z.object({
+      subject: z
+        .string({ required_error: 'Subject is required' })
+        .min(1, { message: 'Subject is required' }),
+    })
+  );

@@ -61,7 +61,7 @@ export default async function HistoryDetailPage({
             </span>
           </Link>
         </Button>
-        <Button asChild className="w-full">
+        <Button asChild className="w-full border border-white">
           <Link href={`/topics/${history.topic.id}`}>
             <Icons.Retake size={20} className="shrink-0" />
             <span>Retake</span>
