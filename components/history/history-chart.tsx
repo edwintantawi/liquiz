@@ -6,7 +6,7 @@ import { Datum, Point, ResponsiveLine } from '@nivo/line';
 
 import { Skeleton } from '~/components/ui/skeleton';
 import { History } from '~/lib/types/history';
-import { cn, tailwindCssColorToHex } from '~/lib/utils';
+import { cn, scoreToPercentage, tailwindCssColorToHex } from '~/lib/utils';
 
 interface HistoryChartProps {
   histories: History[];
@@ -78,7 +78,10 @@ function Chart({
       axisBottom={null}
       axisLeft={null}
       yFormat={(value) => {
-        const scoreInPercentage = (Number(value) / numberOfQuestions) * 100;
+        const scoreInPercentage = scoreToPercentage({
+          score: Number(value),
+          total: numberOfQuestions,
+        });
         const isLowestOrHighestScore =
           value === lowScore || value === highScore;
         return isLowestOrHighestScore ? `${scoreInPercentage}%` : '';

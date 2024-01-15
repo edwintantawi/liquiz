@@ -73,3 +73,13 @@ export function splitIntoParts(
     }
   );
 }
+
+export function scoreToPercentage({
+  score,
+  total,
+}: {
+  score: number;
+  total: number;
+}) {
+  return Math.round((score / total) * 100);
+}
