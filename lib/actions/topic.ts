@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { tasksQueue } from '~/lib/queue';
-import { createTopicSchema } from '~/lib/schema/topic';
+import { createTopicSchema, deleteTopicSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
 import { TopicMessage } from '~/lib/types/topic';
 
@@ -104,4 +104,68 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   }
 
   redirect(`/topics/${topicId}`);
+};
+
+export const deleteTopic: ServerAction<typeof deleteTopicSchema> = async (
+  _,
+  formData
+) => {
+  const validatedForm = deleteTopicSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!validatedForm.success) {
+    return {
+      validationErrors: validatedForm.error.flatten().fieldErrors,
+      error: null,
+      message: null,
+    };
+  }
+
+  const session = await auth();
+  if (!session.isAuthenticated) {
+    return {
+      validationErrors: null,
+      error: 'User must be authenticated to perform this action',
+      message: null,
+    };
+  }
+
+  try {
+    const topic = await database.topic.findUnique({
+      select: { subject: { select: { userId: true } } },
+      where: { id: validatedForm.data.topic },
+    });
+
+    if (topic === null) {
+      return {
+        validationErrors: null,
+        error: 'Topic not found',
+        message: null,
+      };
+    }
+
+    if (session.user.id !== topic.subject.userId) {
+      return {
+        validationErrors: null,
+        error: 'User must be the owner of the topic to perform this action',
+        message: null,
+      };
+    }
+
+    await database.topic.delete({
+      where: {
+        id: validatedForm.data.topic,
+        subject: { userId: session.user.id },
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      validationErrors: null,
+      error: 'Failed to delete topic',
+      message: null,
+    };
+  }
+
+  redirect('/topics');
 };
