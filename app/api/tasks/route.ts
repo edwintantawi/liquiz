@@ -47,13 +47,13 @@ export async function POST(request: Request) {
       outputParser: outputFixingParser,
     });
 
-    const answerFormatingChain = (await answerFormattingChain.call({
+    const chainResult = (await answerFormattingChain.call({
       topic: payload.topic.title,
       numberOfQuestions: payload.topic.numberOfQuestions,
       context: payload.contexts.join('\n\n'),
     })) as Result;
 
-    const questions = answerFormatingChain.records;
+    const questions = chainResult.records;
 
     const questionsPromises = questions.map((question) => {
       return database.question.create({
