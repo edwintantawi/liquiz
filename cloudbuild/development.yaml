@@ -1,12 +1,11 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: gcr.io/cloud-builders/docker
+    secretEnv: ['BASE_URL']
+    entrypoint: bash
     args:
-      [
-        'build',
-        '-t',
-        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA',
-        '.',
-      ]
+      - -c,
+      - |
+        docker build build -t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA --build-arg=BASE_URL=$$BASE_URL .',
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -64,3 +63,7 @@ images:
   - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA'
 options:
   logging: CLOUD_LOGGING_ONLY
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/liquiz-dev-base-url/versions/latest
+      env: 'BASE_URL'
