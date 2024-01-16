@@ -5,7 +5,7 @@ steps:
     args:
       - -c,
       - |
-        docker build build -t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA --build-arg=BASE_URL=$$BASE_URL .',
+        docker build -t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA --build-arg=BASE_URL=$$BASE_URL .',
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
