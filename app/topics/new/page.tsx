@@ -4,6 +4,10 @@ import { CreateTopicForm } from '~/components/topic/create-topic-form';
 import { getMaxNumberOfQuestionsBySubjectId } from '~/lib/actions/document';
 import { getAllSubjects } from '~/lib/queries/subject';
 
+export const metadata = {
+  title: 'Create Topic',
+};
+
 interface CreateTopicPageProps {
   searchParams: { subject_id?: string };
 }

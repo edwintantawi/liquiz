@@ -11,6 +11,10 @@ import { Button } from '~/components/ui/button';
 import { getQuestionsByTopicId } from '~/lib/queries/question';
 import { getTopicById } from '~/lib/queries/topic';
 
+export const metadata = {
+  title: 'Topic Detail',
+};
+
 interface TopicDetailPageProps {
   params: { topic_id: string };
 }

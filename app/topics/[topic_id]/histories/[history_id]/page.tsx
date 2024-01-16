@@ -9,6 +9,10 @@ import { Button } from '~/components/ui/button';
 import { getHistoryById } from '~/lib/queries/history';
 import { cn } from '~/lib/utils';
 
+export const metadata = {
+  title: 'Topic History',
+};
+
 interface HistoryDetailPageProps {
   params: { topic_id: string; history_id: string };
 }

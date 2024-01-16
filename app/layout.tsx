@@ -20,18 +20,28 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { Skeleton } from '~/components/ui/skeleton';
+import { siteConfig } from '~/configs/site';
 import { auth } from '~/lib/auth';
 import { cn } from '~/lib/utils';
 
 import '~/app/style.css';
 
 export const metadata = {
+  metadataBase: siteConfig.url,
+  manifest: siteConfig.manifest,
   title: {
-    default: 'LiQuiz',
-    template: '%s - LiQuiz',
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.title}`,
   },
-  description:
-    'Turn your study materials into a dynamic and interactive learning experience with our AI-powered question generator.',
+  openGraph: {
+    type: 'website',
+    siteName: siteConfig.title,
+    title: `${siteConfig.title} | ${siteConfig.headline}`,
+    description: siteConfig.description,
+    url: siteConfig.url,
+  },
+  description: siteConfig.description,
+  icons: siteConfig.icons,
 };
 
 interface RootLayoutProps {

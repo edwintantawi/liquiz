@@ -25,7 +25,6 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Dashboard',
-  description: 'Manage all your subjects and topics easily',
 };
 
 export default async function DashboardPage() {

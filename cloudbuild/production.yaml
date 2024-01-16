@@ -37,6 +37,8 @@ steps:
       - '--timeout'
       - '600'
       - '--set-secrets'
+      - 'BASE_URL=liquiz-production-base-url:latest'
+      - '--set-secrets'
       - 'DATABASE_URL=liquiz-production-database-url:latest'
       - '--set-secrets'
       - 'DIRECT_URL=liquiz-production-direct-url:latest'
