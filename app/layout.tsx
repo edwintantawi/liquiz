@@ -21,11 +21,13 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { Skeleton } from '~/components/ui/skeleton';
 import { auth } from '~/lib/auth';
+import { env } from '~/lib/env.mjs';
 import { cn } from '~/lib/utils';
 
 import '~/app/style.css';
 
 export const metadata = {
+  metadataBase: new URL(env.BASE_URL),
   title: {
     default: 'LiQuiz',
     template: '%s - LiQuiz',
