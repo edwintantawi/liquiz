@@ -28,6 +28,7 @@ import '~/app/style.css';
 
 export const metadata = {
   metadataBase: new URL(env.BASE_URL),
+  manifest: '/manifest.json',
   title: {
     default: 'LiQuiz',
     template: '%s - LiQuiz',
