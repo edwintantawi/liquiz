@@ -3,11 +3,12 @@ steps:
     secretEnv: ['BASE_URL']
     entrypoint: bash
     args:
-      [ '-c',
+      [
+        '-c',
         docker build --build-arg='BASE_URL=$$BASE_URL',
         '-t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA',
-        '.'
-      ],
+        '.',
+      ]
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
