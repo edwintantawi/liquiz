@@ -11,6 +11,10 @@ import { SubjectListSkeleton } from '~/components/subject/subject-list-skeleton'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 
+export const metadata = {
+  title: 'Subjects',
+};
+
 export default function SubjectsPage() {
   return (
     <Container>

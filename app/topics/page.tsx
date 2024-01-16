@@ -11,6 +11,10 @@ import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 
+export const metadata = {
+  title: 'Topics',
+};
+
 export default function TopicsPage() {
   return (
     <Container>

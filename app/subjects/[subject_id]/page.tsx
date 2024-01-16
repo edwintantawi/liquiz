@@ -15,6 +15,10 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 import { getSubjectById } from '~/lib/queries/subject';
 
+export const metadata = {
+  title: 'Subject Detail',
+};
+
 interface SubjectDetailPageProps {
   params: { subject_id: string };
 }

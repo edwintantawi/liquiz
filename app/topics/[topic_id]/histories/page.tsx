@@ -16,6 +16,10 @@ import { Button } from '~/components/ui/button';
 import { getHistoriesChartByTopicId } from '~/lib/queries/history';
 import { getTopicById } from '~/lib/queries/topic';
 
+export const metadata = {
+  title: 'Topic Histories',
+};
+
 interface TopicHistoriesPageProps {
   params: { topic_id: string };
 }

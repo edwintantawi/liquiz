@@ -5,6 +5,10 @@ import { Header } from '~/components/header';
 import { UpdateSubjectForm } from '~/components/subject/update-subject-form';
 import { getSubjectById } from '~/lib/queries/subject';
 
+export const metadata = {
+  title: 'Edit Subject',
+};
+
 interface EditSubjectPageProps {
   params: { subject_id: string };
 }
