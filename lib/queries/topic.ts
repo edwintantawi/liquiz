@@ -115,6 +115,7 @@ export async function getAllTopicBySubjectId(
   const topics = await database.topic.findMany({
     include: { subject: true },
     where: { subject: { id: subjectId, userId: session.user.id } },
+    orderBy: { createdAt: 'desc' },
   });
 
   return topics.map((topic) => {
