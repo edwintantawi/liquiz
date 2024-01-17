@@ -49,3 +49,18 @@ Ensures that the questions won't be repeated
 
 ONLY RETURN WITHOUT ADDITIONAL MESSAGE!
 `;
+
+export const createHistorySummaryPrompt = `
+Exam topic: {topic}
+
+Provide a summary in the form of feedback and suggestions from all the following test results to the user so that the user can understand where the user already understands the topic and also where the user still does not or does not understand the topic based on the results of the user's answers, provide feedback that allows the user to learn from it
+
+The feedback and suggestions should use the same language as the exam question!
+
+Feedback and suggestions are based on the entire question on the exam not per question!
+
+Add useful feedback that your users can learn from. Educate them so they will do better next time.
+
+The exam result:
+{questions}
+`;

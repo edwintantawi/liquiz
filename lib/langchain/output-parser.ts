@@ -31,3 +31,13 @@ export const outputParser = StructuredOutputParser.fromZodSchema(
       .describe('List of questions')
   )
 );
+
+export const historySummaryOutputParser = StructuredOutputParser.fromZodSchema(
+  z.object({
+    feedbacks: z.array(
+      z.string({ description: 'Feedback result per pargraph' }),
+      { description: 'List of feedback paragraphs' }
+    ),
+    suggestions: z.array(z.string({ description: 'Suggestions result' })),
+  })
+);
