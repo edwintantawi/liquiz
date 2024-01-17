@@ -32,3 +32,23 @@ export interface HistoryDetail extends History {
     };
   }[];
 }
+
+export interface HistorySummaryMessage {
+  history: {
+    id: string;
+  };
+  topic: {
+    title: string;
+  };
+  questions: {
+    id: string;
+    statement: string;
+    options: {
+      id: string;
+      statement: string;
+      description: string;
+      isCorrect: boolean;
+      isChosen: boolean;
+    }[];
+  }[];
+}
