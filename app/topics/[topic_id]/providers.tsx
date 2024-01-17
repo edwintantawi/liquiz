@@ -5,11 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 
-export function TopicDetailProviders({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function TopicProviders({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
