@@ -107,7 +107,11 @@ export default async function HistoryDetailPage({
         </ul>
 
         {hasSummary && (
-          <HistorySummary historyId={history.id} summary={history.summary} />
+          <HistorySummary
+            historyId={history.id}
+            summary={history.summary}
+            color={history.topic.subject.color}
+          />
         )}
 
         <div className="mt-12 flex items-center justify-between gap-2">
