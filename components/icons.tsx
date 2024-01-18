@@ -23,6 +23,7 @@ import {
   SparklesIcon,
   StarIcon,
   TargetIcon,
+  TimerIcon,
   Trash2Icon,
   XIcon,
 } from 'lucide-react';
@@ -55,4 +56,5 @@ export const Icons = {
   Edit: EditIcon,
   AI: SparklesIcon,
   Suggestion: LightbulbIcon,
+  Timer: TimerIcon,
 };

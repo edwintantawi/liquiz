@@ -4,13 +4,13 @@
 import * as React from 'react';
 
 import { HistoryStatus } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { Icons } from '~/components/icons';
+import { RetrievalTime } from '~/components/retrieval-time';
+import { Skeleton } from '~/components/ui/skeleton';
 import { HistorySummary } from '~/lib/types/history';
 import { cn, tailwindCssColorToHex } from '~/lib/utils';
-
-import { Icons } from '../icons';
-import { Skeleton } from '../ui/skeleton';
 
 interface HistorySummaryProps {
   historyId: string;
@@ -23,6 +23,7 @@ export function HistorySummary({
   summary,
   color,
 }: HistorySummaryProps) {
+  const queryClient = useQueryClient();
   const [isSummaryBeingGenerated, setIsSummaryBeingGenerated] =
     React.useState<boolean>(summary.status === HistoryStatus.PENDING);
 
@@ -44,10 +45,14 @@ export function HistorySummary({
     refetchInterval: 10_000,
   });
 
+  React.useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['retrieval-time', historyId] });
+  }, [queryClient, historyId, isSummaryBeingGenerated]);
+
   return (
     <article
       className={cn(
-        'relative rounded-md border bg-opacity-5 px-4 py-3 pb-5',
+        'relative rounded-md border bg-opacity-5 px-4 py-3 pb-4',
         color
       )}
       style={{ borderColor: tailwindCssColorToHex(color) }}
@@ -59,7 +64,7 @@ export function HistorySummary({
         <h3 className="sr-only">Feedback</h3>
         <div className="space-y-3 text-sm">
           {data.feedbacks.map((feedback, index) => (
-            <p key={index} className="text-muted-foreground">
+            <p key={index} className="text-justify text-muted-foreground">
               {feedback}
             </p>
           ))}
@@ -88,7 +93,7 @@ export function HistorySummary({
           <Icons.Suggestion size={20} stroke={tailwindCssColorToHex(color)} />{' '}
           Suggestions
         </h3>
-        <ul className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
+        <ul className="list-disc space-y-2 pl-4 text-justify text-sm text-muted-foreground">
           {data.suggestions.map((suggestion, index) => (
             <li key={index}>{suggestion}</li>
           ))}
@@ -112,6 +117,9 @@ export function HistorySummary({
           </div>
         )}
       </section>
+      <div className="mt-4">
+        <RetrievalTime targetId={historyId} />
+      </div>
     </article>
   );
 }
