@@ -39,7 +39,7 @@ export function HistoryChart({
         />
       ) : (
         <div className="h-full pb-3">
-          <Skeleton className="grid h-full w-full place-items-center border border-dashed p-8">
+          <Skeleton className="grid size-full place-items-center border border-dashed p-8">
             <p className="text-balance text-center text-xs text-muted-foreground">
               Cannot display the graph because the data is not sufficient, to
               display the graph requires 2 or more histories

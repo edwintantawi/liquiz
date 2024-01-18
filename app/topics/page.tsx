@@ -19,7 +19,7 @@ export default function TopicsPage() {
   return (
     <Container>
       <Header title="Topics" description="Collection of existing topics">
-        <Button asChild size="icon" className="h-12 w-12">
+        <Button asChild size="icon" className="size-12">
           <Link href="/topics/new">
             <Icons.Plus />
             <span className="sr-only">Create new topic</span>

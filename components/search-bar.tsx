@@ -90,7 +90,7 @@ export function SearchBar() {
             <Button
               type="reset"
               variant="secondary"
-              className="h-7 w-7 border p-1"
+              className="size-7 border p-1"
               onClick={handleClearSearch}
             >
               <Icons.Cancel size={16} />

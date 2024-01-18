@@ -28,7 +28,7 @@ export function HistoryItem({ topicId, history }: HistoryItemProps) {
     >
       <div
         className={cn(
-          'grid h-10 w-10 place-items-center rounded-sm text-xs font-semibold text-white',
+          'grid size-10 place-items-center rounded-sm text-xs font-semibold text-white',
           {
             'bg-green-500': history.scoreInPercentage >= 75,
             'bg-yellow-500':
@@ -67,11 +67,11 @@ export function HistoryItem({ topicId, history }: HistoryItemProps) {
 export function HistoryItemSkeleton() {
   return (
     <div className="grid grid-cols-[auto,1fr,auto] items-center gap-2 rounded-md border p-2">
-      <Skeleton className="h-10 w-10" />
+      <Skeleton className="size-10" />
       <div>
         <Skeleton className="h-5 w-2/3" />
       </div>
-      <Skeleton className="h-10 w-10" />
+      <Skeleton className="size-10" />
     </div>
   );
 }
