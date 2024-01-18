@@ -1,11 +1,11 @@
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { getServerSession, NextAuthOptions } from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { AuthOptions, getServerSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { database } from '~/lib/database';
 import { env } from '~/lib/env.mjs';
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(database),
   secret: env.NEXTAUTH_SECRET,
   session: {

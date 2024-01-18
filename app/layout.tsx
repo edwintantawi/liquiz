@@ -96,19 +96,19 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
                     <Link href="/subjects">
-                      <Icons.Subject className="mr-2 h-4 w-4" />
+                      <Icons.Subject className="mr-2 size-4" />
                       <span>Subject</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/topics">
-                      <Icons.Topic className="mr-2 h-4 w-4" />
+                      <Icons.Topic className="mr-2 size-4" />
                       <span>Topic</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/favorites">
-                      <Icons.Favorite className="mr-2 h-4 w-4" />
+                      <Icons.Favorite className="mr-2 size-4" />
                       <span>Favorite</span>
                     </Link>
                   </DropdownMenuItem>

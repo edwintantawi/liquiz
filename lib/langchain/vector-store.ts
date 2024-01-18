@@ -1,6 +1,6 @@
+import { PrismaVectorStore } from '@langchain/community/vectorstores/prisma';
+import { OpenAIEmbeddings } from '@langchain/openai';
 import { Document, Prisma } from '@prisma/client';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
 
 import { database } from '~/lib/database';
 
