@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 
+import { Providers } from '~/app/providers';
 import { SignInButton } from '~/components/auth/signin-button';
 import { SignOutButton } from '~/components/auth/signout-button';
 import { Container } from '~/components/container';
@@ -128,7 +129,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         </nav>
 
         <main id="main" className="flex-1">
-          {children}
+          <Providers>{children}</Providers>
         </main>
 
         <footer className="mt-8">
