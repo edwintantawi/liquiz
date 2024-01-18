@@ -135,13 +135,22 @@ model Choice {
   @@map("choices")
 }
 
+enum HistoryStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
 model History {
-  id        String   @id @default(uuid())
-  topicId   String   @map("topic_id")
-  score     Int
-  createdAt DateTime @default(now()) @map("created_at")
-  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  choices   Choice[]
+  id          String        @id @default(uuid())
+  topicId     String        @map("topic_id")
+  score       Int
+  feedbacks   String[]
+  suggestions String[]
+  status      HistoryStatus @default(NONE)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  topic       Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  choices     Choice[]
 
   @@map("histories")
 }

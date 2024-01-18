@@ -26,3 +26,7 @@ class Queue {
 export const tasksQueue = new Queue({
   topicName: env.GCP_PUBSUB_TOPIC_NAME,
 });
+
+export const historySummaryQueue = new Queue({
+  topicName: env.GCP_PUBSUB_HISTORY_SUMMARY_TOPIC_NAME,
+});

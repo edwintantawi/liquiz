@@ -78,6 +78,11 @@ export async function getHistoryById({
         },
       };
     }),
+    summary: {
+      status: history.status,
+      feedbacks: history.feedbacks,
+      suggestions: history.suggestions,
+    },
   };
 }
 
