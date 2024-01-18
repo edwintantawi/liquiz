@@ -1,7 +1,7 @@
+import { PromptTemplate } from '@langchain/core/prompts';
 import { HistoryStatus, RetrievalTimeType } from '@prisma/client';
 import { LLMChain } from 'langchain/chains';
 import { OutputFixingParser } from 'langchain/output_parsers';
-import { PromptTemplate } from 'langchain/prompts';
 import { z } from 'zod';
 
 import { database } from '~/lib/database';
