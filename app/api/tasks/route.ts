@@ -1,3 +1,4 @@
+import { RetrievalTimeType } from '@prisma/client';
 import { LLMChain } from 'langchain/chains';
 import { OutputFixingParser } from 'langchain/output_parsers';
 import { PromptTemplate } from 'langchain/prompts';
@@ -26,6 +27,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const t0 = performance.now();
+
     const llm = createLLM();
     const body = await request.json();
     const payload = JSON.parse(
@@ -75,6 +78,15 @@ export async function POST(request: Request) {
 
     await database.$transaction(questionsPromises);
 
+    const t1 = performance.now();
+    const retrievalTime = t1 - t0;
+    await database.retrievalTime.create({
+      data: {
+        type: RetrievalTimeType.TOPIC,
+        targetId: payload.topic.id,
+        duration: retrievalTime,
+      },
+    });
     return new Response(undefined, { status: 200 });
   } catch (error) {
     console.error(error);

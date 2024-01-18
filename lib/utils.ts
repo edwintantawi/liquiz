@@ -83,3 +83,10 @@ export function scoreToPercentage({
 }) {
   return Math.round((score / total) * 100);
 }
+
+export function formatRetrievalTime(durationInMs: number) {
+  const min = Math.floor((durationInMs / 1000 / 60) << 0);
+  const sec = Math.floor((durationInMs / 1000) % 60);
+
+  return `${min} min ${sec} sec`;
+}

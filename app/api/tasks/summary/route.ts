@@ -1,4 +1,4 @@
-import { HistoryStatus } from '@prisma/client';
+import { HistoryStatus, RetrievalTimeType } from '@prisma/client';
 import { LLMChain } from 'langchain/chains';
 import { OutputFixingParser } from 'langchain/output_parsers';
 import { PromptTemplate } from 'langchain/prompts';
@@ -27,6 +27,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const t0 = performance.now();
+
     const llm = createLLM();
     const body = await request.json();
     const payload = JSON.parse(
@@ -74,6 +76,16 @@ ${index + 1}. ${q.statement}
         status: HistoryStatus.COMPLETED,
       },
       where: { id: payload.history.id },
+    });
+
+    const t1 = performance.now();
+    const retrievalTime = t1 - t0;
+    await database.retrievalTime.create({
+      data: {
+        type: RetrievalTimeType.HISTORY,
+        targetId: payload.history.id,
+        duration: retrievalTime,
+      },
     });
 
     return new Response(undefined, { status: 200 });

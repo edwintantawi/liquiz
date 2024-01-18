@@ -8,7 +8,9 @@ import { TopicDeleteButton } from '~/components/topic/topic-delete-button';
 import { TopicQuestionForm } from '~/components/topic/topic-question-form';
 import { Button } from '~/components/ui/button';
 import { getQuestionsByTopicId } from '~/lib/queries/question';
+import { getRetrievalTimeByTargetId } from '~/lib/queries/retrieval-time';
 import { getTopicById } from '~/lib/queries/topic';
+import { formatRetrievalTime } from '~/lib/utils';
 
 export const metadata = {
   title: 'Topic Detail',
@@ -23,8 +25,11 @@ export default async function TopicDetailPage({
 }: TopicDetailPageProps) {
   const topic = await getTopicById(params.topic_id);
   const questions = await getQuestionsByTopicId(params.topic_id);
+  const retrievalTime = await getRetrievalTimeByTargetId(params.topic_id);
 
   if (topic === null) notFound();
+
+  const hasRetrievalTime = retrievalTime !== null;
 
   return (
     <Container className="p-0">
@@ -56,6 +61,12 @@ export default async function TopicDetailPage({
 
         <TopicDeleteButton topicId={topic.id} />
       </DetailHeader>
+
+      {hasRetrievalTime && (
+        <p className="mt-3 text-right text-xs text-muted-foreground">
+          Result time: <span>{formatRetrievalTime(retrievalTime)}</span>
+        </p>
+      )}
 
       <TopicQuestionForm
         topicId={topic.id}
