@@ -57,9 +57,11 @@ steps:
       - '--set-secrets'
       - 'GCP_SUBJECT_FILE_BUCKET_NAME=liquiz-production-gcp-subject-file-bucket-name:latest'
       - '--set-secrets'
+      - 'GCP_PUBSUB_VERIFICATION_TOKEN=liquiz-production-gcp-pubsub-verification-token:latest'
+      - '--set-secrets'
       - 'GCP_PUBSUB_TOPIC_NAME=liquiz-production-gcp-pubsub-topic-name:latest'
       - '--set-secrets'
-      - 'GCP_PUBSUB_VERIFICATION_TOKEN=liquiz-production-gcp-pubsub-verification-token:latest'
+      - 'GCP_PUBSUB_HISTORY_SUMMARY_TOPIC_NAME=liquiz-production-gcp-pubsub-history-summary-topic-name:latest'
 images:
   - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA'
 options:
