@@ -154,3 +154,19 @@ model History {
 
   @@map("histories")
 }
+
+enum RetrievalTimeType {
+  TOPIC
+  HISTORY
+  SUBJECT
+}
+
+model RetrievalTime {
+  id        String            @id @default(uuid())
+  targetId  String            @map("target_id")
+  type      RetrievalTimeType
+  duration  Int
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  @@map("retrieval_times")
+}
