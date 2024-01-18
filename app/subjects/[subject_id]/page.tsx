@@ -7,6 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
+import { RetrievalTime } from '~/components/retrieval-time';
 import { Section } from '~/components/section';
 import { SubjectDeleteButton } from '~/components/subject/subject-delete-button';
 import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
@@ -71,6 +72,8 @@ export default async function SubjectDetailPage({
 
         <SubjectDeleteButton subjectId={subject.id} />
       </DetailHeader>
+
+      <RetrievalTime targetId={subject.id} />
 
       <div className="p-3">
         <Section
