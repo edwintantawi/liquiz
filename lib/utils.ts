@@ -88,5 +88,8 @@ export function formatRetrievalTime(durationInMs: number) {
   const min = Math.floor((durationInMs / 1000 / 60) << 0);
   const sec = Math.floor((durationInMs / 1000) % 60);
 
-  return `${min} min ${sec} sec`;
+  return `${String(min).padStart(2, '0')} min ${String(sec).padStart(
+    2,
+    '0'
+  )} sec`;
 }
