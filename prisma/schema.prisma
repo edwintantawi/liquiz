@@ -8,6 +8,14 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./schema.svg"
+  theme    = "neutral"
+
+  includeRelationFromFields = true
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
