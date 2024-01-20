@@ -23,7 +23,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   _,
   formData
 ) => {
-  const validatedForm = createSubjectSchema.safeParse(
+  const validatedForm = await createSubjectSchema.safeParseAsync(
     Object.fromEntries(formData)
   );
   if (!validatedForm.success) {

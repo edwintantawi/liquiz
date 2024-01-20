@@ -1,6 +1,8 @@
+import { PDFDocument } from 'pdf-lib';
 import { z } from 'zod';
 
 export const MAX_FILE_SIZE = 30;
+export const MAX_FILE_PAGES = 1_000;
 
 const TO_BYTES = 20;
 const MAX_FILE_SIZE_IN_BYTES = MAX_FILE_SIZE << TO_BYTES;
@@ -21,9 +23,19 @@ export const createSubjectSchema = z.object({
     .refine((file) => file.type === 'application/pdf', {
       message: 'Document must be in .pdf format',
     })
-    .refine((file) => file.size < MAX_FILE_SIZE_IN_BYTES, {
+    .refine((file) => file.size <= MAX_FILE_SIZE_IN_BYTES, {
       message: `Document size must be ${MAX_FILE_SIZE}MB or smaller.`,
-    }),
+    })
+    .refine(
+      async (file) => {
+        const pdf = await PDFDocument.load(await file.arrayBuffer());
+        const numberOfPages = pdf.getPageCount();
+        return numberOfPages <= MAX_FILE_PAGES;
+      },
+      {
+        message: `Document must be ${MAX_FILE_PAGES} pages or smaller.`,
+      }
+    ),
 });
 
 export const deleteSubjectSchema = z.object({
