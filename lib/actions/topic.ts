@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { createVectorStore } from '~/lib/langchain/vector-store';
+import { getMaxNumberOfQuestionsBySubjectId } from '~/lib/queries/document';
 import { tasksQueue } from '~/lib/queue';
 import { createTopicSchema, deleteTopicSchema } from '~/lib/schema/topic';
 import { ServerAction } from '~/lib/types/action';
@@ -38,7 +39,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
   }
 
   const subject = await database.subject.findUnique({
-    include: { _count: { select: { documents: true } } },
+    select: { id: true, userId: true },
     where: { id: validatedForm.data.subject },
   });
 
@@ -58,11 +59,15 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
     };
   }
 
-  if (validatedForm.data.numberOfQuestions > subject._count.documents) {
+  const numberOfQuestionsLimit = await getMaxNumberOfQuestionsBySubjectId(
+    validatedForm.data.subject
+  );
+
+  if (validatedForm.data.numberOfQuestions > numberOfQuestionsLimit) {
     return {
       validationErrors: {
         numberOfQuestions: [
-          `Maximum number of questions for this subject is ${subject._count.documents}`,
+          `Maximum number of questions for this subject is ${numberOfQuestionsLimit}`,
         ],
       },
       error: null,
