@@ -7,6 +7,7 @@ import { Icons } from '~/components/icons';
 import { RetrievalTime } from '~/components/retrieval-time';
 import { TopicDeleteButton } from '~/components/topic/topic-delete-button';
 import { TopicQuestionForm } from '~/components/topic/topic-question-form';
+import { TopicQuestionReveal } from '~/components/topic/topic-question-reveal';
 import { Button } from '~/components/ui/button';
 import { getQuestionsByTopicId } from '~/lib/queries/question';
 import { getTopicById } from '~/lib/queries/topic';
@@ -17,10 +18,12 @@ export const metadata = {
 
 interface TopicDetailPageProps {
   params: { topic_id: string };
+  searchParams: { reveal?: string };
 }
 
 export default async function TopicDetailPage({
   params,
+  searchParams,
 }: TopicDetailPageProps) {
   const topic = await getTopicById(params.topic_id);
   const questions = await getQuestionsByTopicId(params.topic_id);
@@ -60,12 +63,16 @@ export default async function TopicDetailPage({
 
       <RetrievalTime targetId={params.topic_id} />
 
-      <TopicQuestionForm
-        topicId={topic.id}
-        subjectId={topic.subject.id}
-        totalQuestions={topic.numberOfQuestions}
-        questions={questions}
-      />
+      {searchParams.reveal ? (
+        <TopicQuestionReveal questions={questions} />
+      ) : (
+        <TopicQuestionForm
+          topicId={topic.id}
+          subjectId={topic.subject.id}
+          totalQuestions={topic.numberOfQuestions}
+          questions={questions}
+        />
+      )}
     </Container>
   );
 }
