@@ -2,6 +2,8 @@
 
 import { redirect } from 'next/navigation';
 
+import { TopicStatus } from '@prisma/client';
+
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { createVectorStore } from '~/lib/langchain/vector-store';
@@ -83,6 +85,7 @@ export const createTopic: ServerAction<typeof createTopicSchema> = async (
         subjectId: validatedForm.data.subject,
         title: validatedForm.data.title,
         numberOfQuestions: validatedForm.data.numberOfQuestions,
+        status: TopicStatus.PENDING,
       },
     });
 
