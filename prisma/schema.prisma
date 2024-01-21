@@ -86,14 +86,21 @@ model Document {
   @@map("documents")
 }
 
+enum TopicStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
 model Topic {
-  id                String     @id @default(uuid())
-  subjectId         String     @map("subject_id")
-  title             String     @db.VarChar(64)
-  numberOfQuestions Int        @map("number_of_questions")
-  subject           Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt         DateTime   @default(now()) @map("created_at")
-  updatedAt         DateTime   @updatedAt @map("updated_at")
+  id                String      @id @default(uuid())
+  subjectId         String      @map("subject_id")
+  title             String      @db.VarChar(64)
+  numberOfQuestions Int         @map("number_of_questions")
+  status            TopicStatus @default(NONE)
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  subject           Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   questions         Question[]
   histories         History[]
 
