@@ -35,6 +35,14 @@ export async function POST(request: Request) {
       Buffer.from(body.message.data, 'base64').toString()
     ) as TopicMessage;
 
+    const topic = await database.topic.findUnique({
+      select: { numberOfQuestions: true },
+      where: { id: payload.topic.id },
+    });
+    if (topic === null) {
+      return new Response(undefined, { status: 200 });
+    }
+
     const outputFixingParser = OutputFixingParser.fromLLM(llm, outputParser);
     const prompt = new PromptTemplate({
       template: createQuestionsPrompt,
