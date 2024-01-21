@@ -26,6 +26,7 @@ interface OptionProps extends React.InputHTMLAttributes<HTMLInputElement> {
   children?: React.ReactNode;
   description?: string;
   isCorrect?: boolean;
+  reveal?: boolean;
 }
 
 Question.Option = function Option({
@@ -35,6 +36,7 @@ Question.Option = function Option({
   description,
   isCorrect,
   checked,
+  reveal = false,
   ...props
 }: OptionProps) {
   const id = React.useId();
@@ -76,7 +78,7 @@ Question.Option = function Option({
         </Label>
       </fieldset>
 
-      {description && checked && (
+      {description && (checked || reveal) && (
         <p
           className={cn(
             'mt-2 rounded-sm border px-3 py-2 text-xs leading-normal text-muted-foreground',
