@@ -2,6 +2,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowUpIcon,
+  BellIcon,
   BookIcon,
   BookmarkIcon,
   BookmarkPlusIcon,
@@ -57,4 +58,5 @@ export const Icons = {
   AI: SparklesIcon,
   Suggestion: LightbulbIcon,
   Timer: TimerIcon,
+  Notification: BellIcon,
 };
