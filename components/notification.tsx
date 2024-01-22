@@ -23,7 +23,12 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export function Notification() {
   const [open, setOpen] = React.useState<boolean>(false);
+  const [prevOperations, setPrevOperations] = React.useState<Operation[]>([]);
+  const [opertionChangedIds, setOpertionChangedIds] = React.useState<string[]>(
+    []
+  );
   const { data: operations = [] } = useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ['operations'],
     queryFn: async () => {
       const response = await fetch('/api/fetcher/operations');
@@ -31,6 +36,21 @@ export function Notification() {
         throw new Error('Something went wrong');
       }
       const result = (await response.json()) as Operation[];
+      if (prevOperations.length === 0) {
+        setPrevOperations(result);
+        return result;
+      }
+
+      for (const item of result) {
+        const oldResult = prevOperations.find(
+          (oldOperation) => oldOperation.id === item.id
+        );
+        if (oldResult?.status !== item.status) {
+          setOpertionChangedIds([...opertionChangedIds, item.id]);
+        }
+      }
+
+      setPrevOperations(result);
       return result;
     },
     refetchInterval: 10_000,
@@ -58,14 +78,18 @@ export function Notification() {
           />
           <span
             className={cn(
-              'absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-red-600 text-[9px] tabular-nums leading-none text-white lg:-right-1.5 lg:-top-1.5 lg:size-5 lg:text-[9px]',
+              'absolute -right-1.5 -top-1.5 grid size-[1.1rem] lg:size-[1.2rem]',
               {
                 hidden: !hasPendingOperation,
               }
             )}
           >
-            {numberOfPendingOperation}
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75" />
+            <span className="relative grid size-[1.1rem] place-content-center rounded-full bg-red-600 text-[9px] tabular-nums leading-none text-white lg:size-[1.2rem]">
+              {numberOfPendingOperation}
+            </span>
           </span>
+
           <span className="sr-only">Notification</span>
         </Button>
       </SheetTrigger>
@@ -95,13 +119,20 @@ export function Notification() {
         <ScrollArea className="h-[calc(100dvh-60px)] px-3 lg:h-[calc(100vh-76px)]">
           <ul className="mb-4 space-y-2 p-1">
             {operations.map((operation) => {
+              const isNew =
+                opertionChangedIds.findIndex((id) => operation.id === id) !==
+                -1;
+
               return (
                 <li key={operation.id} onClick={handleCloseSheet}>
                   <NotificationItem
-                    title={operation.message}
+                    type={operation.type}
                     status={operation.status}
+                    title={operation.message}
                     url={operation.url}
-                    date={operation.createdAt}
+                    color={operation.color}
+                    date={operation.date}
+                    isNew={isNew}
                   />
                 </li>
               );
@@ -114,15 +145,21 @@ export function Notification() {
 }
 
 function NotificationItem({
-  title,
   status,
+  type,
+  title,
   url,
+  color,
   date,
+  isNew,
 }: {
   status: 'COMPLETED' | 'PENDING';
-  url: string;
+  type: 'TOPIC' | 'HISTORY';
   title: string;
+  url: string;
+  color: string;
   date: Date | string;
+  isNew: boolean;
 }) {
   const formatedDate = new Date(date).toLocaleDateString('en-US', {
     day: 'numeric',
@@ -133,15 +170,27 @@ function NotificationItem({
     second: '2-digit',
   });
 
-  return (
-    <article className="relative grid grid-cols-[auto,1fr] gap-2 rounded-md border p-2 text-xs hover:ring-2 hover:ring-ring hover:ring-offset-2">
-      {status === 'COMPLETED' && (
-        <Icons.Correct size={16} className="text-green-600" />
-      )}
+  const iconType: Record<'TOPIC' | 'HISTORY', React.ReactNode> = {
+    HISTORY: <Icons.AI size={12} className={cn('inline stroke-white')} />,
+    TOPIC: <Icons.Topic size={12} className={cn('inline stroke-white')} />,
+  };
 
-      {status === 'PENDING' && (
-        <Icons.Loader size={16} className="animate-spin" />
+  return (
+    <article
+      className={cn(
+        'relative grid grid-cols-[auto,auto,1fr] gap-2 rounded-md border p-2 text-xs hover:ring-2 hover:ring-ring hover:ring-offset-2',
+        {
+          'animate-pulse-once bg-green-600/10':
+            isNew === true && status === 'COMPLETED',
+          'animate-pulse': status === 'PENDING',
+        }
       )}
+    >
+      <div className="flex flex-col items-center gap-1">
+        <span className={cn('aspect-square rounded-sm px-1 py-0.5', color)}>
+          {iconType[type]}
+        </span>
+      </div>
 
       <div>
         <h3 className="mb-1 font-semibold">
@@ -149,6 +198,14 @@ function NotificationItem({
             href={url}
             className="after:absolute after:inset-0 after:content-['']"
           >
+            <span className="mr-1">
+              {status === 'COMPLETED' && (
+                <Icons.Correct size={16} className="inline text-green-600" />
+              )}
+              {status === 'PENDING' && (
+                <Icons.Loader size={16} className="inline animate-spin" />
+              )}
+            </span>
             {title}
           </Link>
         </h3>

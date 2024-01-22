@@ -3,6 +3,7 @@ import { HistoryStatus, TopicStatus } from '@prisma/client';
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { Operation } from '~/lib/types/operation';
+import { getRandomColor } from '~/lib/utils';
 
 export async function GET(_: Request) {
   const session = await auth();
@@ -30,8 +31,9 @@ export async function GET(_: Request) {
       id: topic.id,
       status,
       url: `/topics/${topic.id}`,
-      createdAt: topic.createdAt,
       message: `${parsedOperation.prefix} ${parsedOperation.action} "${topic.title}" ${parsedOperation.resource}`,
+      color: getRandomColor(topic.subjectId),
+      date: topic.updatedAt,
     };
   });
 
@@ -41,7 +43,7 @@ export async function GET(_: Request) {
         topic: { subject: { userId: session.user.id } },
         status: { not: { equals: HistoryStatus.NONE } },
       },
-      include: { topic: { select: { title: true } } },
+      include: { topic: { select: { title: true, subjectId: true } } },
       orderBy: { createdAt: 'desc' },
     })
   ).map((history) => {
@@ -56,13 +58,14 @@ export async function GET(_: Request) {
       id: history.id,
       status,
       url: `/topics/${history.topicId}/histories/${history.id}`,
-      createdAt: history.createdAt,
       message: `${parsedOperation.prefix} ${parsedOperation.action} "${history.topic.title}" ${parsedOperation.resource}`,
+      color: getRandomColor(history.topic.subjectId),
+      date: history.updatedAt,
     };
   });
 
   let operations = [...topics, ...histories].sort((a, b) =>
-    a.createdAt > b.createdAt ? -1 : 1
+    a.date > b.date ? -1 : 1
   );
   const pendingOperations = operations.filter(
     (operation) => operation.status === 'PENDING'

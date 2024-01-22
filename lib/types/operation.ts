@@ -4,5 +4,6 @@ export interface Operation {
   type: 'TOPIC' | 'HISTORY';
   url: string;
   message: string;
-  createdAt: Date;
+  color: string;
+  date: Date;
 }
