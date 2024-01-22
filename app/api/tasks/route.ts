@@ -1,5 +1,5 @@
 import { PromptTemplate } from '@langchain/core/prompts';
-import { RetrievalTimeType } from '@prisma/client';
+import { RetrievalTimeType, TopicStatus } from '@prisma/client';
 import { LLMChain } from 'langchain/chains';
 import { OutputFixingParser } from 'langchain/output_parsers';
 import { z } from 'zod';
@@ -34,6 +34,15 @@ export async function POST(request: Request) {
     const payload = JSON.parse(
       Buffer.from(body.message.data, 'base64').toString()
     ) as TopicMessage;
+
+    const topic = await database.topic.findUnique({
+      select: { numberOfQuestions: true },
+      where: { id: payload.topic.id },
+    });
+    if (topic === null) {
+      return new Response(undefined, { status: 200 });
+    }
+    const numberOfTotalTopicQuestions = topic.numberOfQuestions;
 
     const outputFixingParser = OutputFixingParser.fromLLM(llm, outputParser);
     const prompt = new PromptTemplate({
@@ -77,6 +86,17 @@ export async function POST(request: Request) {
     });
 
     await database.$transaction(questionsPromises);
+
+    const latestNumberOfQuestions = await database.question.count({
+      where: { topicId: payload.topic.id },
+    });
+
+    if (latestNumberOfQuestions === numberOfTotalTopicQuestions) {
+      await database.topic.update({
+        where: { id: payload.topic.id },
+        data: { status: TopicStatus.COMPLETED },
+      });
+    }
 
     const t1 = performance.now();
     const retrievalTime = t1 - t0;
