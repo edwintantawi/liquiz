@@ -9,6 +9,7 @@ import { env } from '~/lib/env.mjs';
 import { createLLM } from '~/lib/langchain/llm';
 import { outputParser } from '~/lib/langchain/output-parser';
 import { createQuestionsPrompt } from '~/lib/langchain/prompt-template';
+import { tasksQueue } from '~/lib/queue';
 import { TopicMessage } from '~/lib/types/topic';
 
 type Question = z.infer<typeof outputParser.schema>[number];
@@ -107,6 +108,24 @@ export async function POST(request: Request) {
         duration: retrievalTime,
       },
     });
+
+    const isNumberOfQuestionsNotFulfilled =
+      questions.length < payload.topic.numberOfQuestions;
+    if (isNumberOfQuestionsNotFulfilled) {
+      const remainingNumberOfQuestions =
+        payload.topic.numberOfQuestions - questions.length;
+      const message: TopicMessage = {
+        topic: {
+          id: payload.topic.id,
+          title: payload.topic.title,
+          numberOfQuestions: remainingNumberOfQuestions,
+        },
+        contexts: payload.contexts,
+        subject: payload.subject,
+      };
+      await tasksQueue.publish(message);
+    }
+
     return new Response(undefined, { status: 200 });
   } catch (error) {
     console.error(error);
