@@ -2,8 +2,10 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
@@ -18,11 +20,12 @@ import {
   SheetTrigger,
 } from '~/components/ui/sheet';
 import { Operation } from '~/lib/types/operation';
-import { cn } from '~/lib/utils';
+import { cn, formatLongDate } from '~/lib/utils';
 
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export function Notification() {
+  const router = useRouter();
   const [prevOperations, setPrevOperations] = React.useState<Operation[]>([]);
   const [opertionChangedIds, setOpertionChangedIds] = React.useState<string[]>(
     []
@@ -47,6 +50,27 @@ export function Notification() {
         );
         if (oldResult?.status !== item.status) {
           setOpertionChangedIds([...opertionChangedIds, item.id]);
+
+          if (item.status === 'COMPLETED') {
+            toast.success(item.message, {
+              description: formatLongDate(item.date),
+              action: {
+                label: 'View',
+                onClick: () => router.push(item.url),
+              },
+            });
+          }
+
+          if (item.status === 'PENDING') {
+            toast(item.message, {
+              icon: <Icons.Loader size={20} className="animate-spin" />,
+              description: formatLongDate(item.date),
+              action: {
+                label: 'View',
+                onClick: () => router.push(item.url),
+              },
+            });
+          }
         }
       }
 
@@ -159,14 +183,7 @@ function NotificationItem({
   date: Date | string;
   isNew: boolean;
 }) {
-  const formatedDate = new Date(date).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
+  const formatedDate = formatLongDate(date);
 
   const iconType: Record<'TOPIC' | 'HISTORY', React.ReactNode> = {
     HISTORY: <Icons.AI size={12} className={cn('inline stroke-white')} />,
