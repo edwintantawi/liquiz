@@ -27,7 +27,11 @@ export async function getHistoryById({
         },
       },
     },
-    where: { id: historyId, topicId },
+    where: {
+      id: historyId,
+      topicId,
+      topic: { subject: { userId: session.user.id } },
+    },
   });
 
   if (history === null) return null;
