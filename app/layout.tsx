@@ -85,7 +85,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 </React.Suspense>
               )}
 
-              <Notification />
+              {isAuthenticated && <Notification />}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
