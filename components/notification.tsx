@@ -10,6 +10,7 @@ import { Button } from '~/components/ui/button';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import {
   Sheet,
+  SheetClose,
   SheetCloseButton,
   SheetContent,
   SheetHeader,
@@ -22,7 +23,6 @@ import { cn } from '~/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 export function Notification() {
-  const [open, setOpen] = React.useState<boolean>(false);
   const [prevOperations, setPrevOperations] = React.useState<Operation[]>([]);
   const [opertionChangedIds, setOpertionChangedIds] = React.useState<string[]>(
     []
@@ -64,10 +64,8 @@ export function Notification() {
 
   const isEmpty = operations.length === 0;
 
-  const handleCloseSheet = () => setOpen(false);
-
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet>
       <SheetTrigger asChild>
         <Button size="icon" variant="outline" className="relative shrink-0">
           <Icons.Notification
@@ -124,7 +122,7 @@ export function Notification() {
                 -1;
 
               return (
-                <li key={operation.id} onClick={handleCloseSheet}>
+                <li key={operation.id}>
                   <NotificationItem
                     type={operation.type}
                     status={operation.status}
@@ -194,20 +192,22 @@ function NotificationItem({
 
       <div>
         <h3 className="mb-1 font-semibold">
-          <Link
-            href={url}
-            className="after:absolute after:inset-0 after:content-['']"
-          >
-            <span className="mr-1">
-              {status === 'COMPLETED' && (
-                <Icons.Correct size={16} className="inline text-green-600" />
-              )}
-              {status === 'PENDING' && (
-                <Icons.Loader size={16} className="inline animate-spin" />
-              )}
-            </span>
-            {title}
-          </Link>
+          <SheetClose asChild>
+            <Link
+              href={url}
+              className="after:absolute after:inset-0 after:content-['']"
+            >
+              <span className="mr-1">
+                {status === 'COMPLETED' && (
+                  <Icons.Correct size={16} className="inline text-green-600" />
+                )}
+                {status === 'PENDING' && (
+                  <Icons.Loader size={16} className="inline animate-spin" />
+                )}
+              </span>
+              {title}
+            </Link>
+          </SheetClose>
         </h3>
         <span className="text-muted-foreground">{formatedDate}</span>
       </div>
