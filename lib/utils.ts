@@ -93,3 +93,14 @@ export function formatRetrievalTime(durationInMs: number) {
     '0'
   )} sec`;
 }
+
+export function formatLongDate(date: Date | string | number) {
+  return new Date(date).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
