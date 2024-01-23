@@ -114,7 +114,7 @@ export function Notification() {
           </div>
         )}
 
-        <ScrollArea className="h-[calc(100dvh-60px)] px-3 lg:h-[calc(100vh-76px)]">
+        <ScrollArea className="h-[calc(100dvh-60px)] px-3">
           <ul className="mb-4 space-y-2 p-1">
             {operations.map((operation) => {
               const isNew =
