@@ -39,20 +39,22 @@ export async function Menu() {
           </div>
         </SheetHeader>
         <div className="flex h-[calc(100dvh-60px)] flex-col justify-between px-4 pb-4">
-          <nav className="space-y-4">
+          <nav className="space-y-2">
             {isAuthenticated && (
-              <div className="grid grid-cols-[auto,1fr] items-center gap-2 rounded-md border-2 px-3 py-2">
+              <div className="grid grid-cols-[auto,1fr] items-center gap-2 rounded-md border bg-primary p-3 text-white">
                 <Avatar className="border">
                   <AvatarImage src={user.image ?? ''} alt="" />
                   <AvatarFallback>
                     {getInitialName(user.name ?? '')}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <h2 className="text-sm font-semibold">{user?.name}</h2>
-                  <span className="rounded-full border bg-muted px-3 py-1 text-xs text-muted-foreground">
+                <div className="space-y-1.5 truncate">
+                  <h2 className="truncate text-sm font-semibold leading-none">
+                    {user.name}
+                  </h2>
+                  <p className="truncate text-xs leading-none text-muted-foreground">
                     {user.email}
-                  </span>
+                  </p>
                 </div>
               </div>
             )}
