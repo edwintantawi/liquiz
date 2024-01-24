@@ -39,6 +39,8 @@ steps:
       - '--set-secrets'
       - 'BASE_URL=liquiz-dev-base-url:latest'
       - '--set-secrets'
+      - 'MAX_NUMBER_OF_QUESTIONS=liquiz-dev-max-number-of-questions:latest'
+      - '--set-secrets'
       - 'DATABASE_URL=liquiz-dev-database-url:latest'
       - '--set-secrets'
       - 'DIRECT_URL=liquiz-dev-direct-url:latest'
