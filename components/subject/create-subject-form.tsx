@@ -50,10 +50,21 @@ export function CreateSubjectForm() {
           </Label>
           <InputMessage className="text-muted-foreground">
             Please use <code className="font-semibold">PDF</code> document
-            format, with a maximum file size of{' '}
-            <code className="font-semibold">{MAX_FILE_SIZE}MB</code> and a
-            maximum of <code className="font-semibold">{MAX_FILE_PAGES}</code>{' '}
-            pages.
+            format
+            {MAX_FILE_SIZE !== 0 && (
+              <span>
+                , with a maximum file size of{' '}
+                <code className="font-semibold">{MAX_FILE_SIZE}MB</code>
+              </span>
+            )}
+            {MAX_FILE_PAGES !== 0 && (
+              <span>
+                {' '}
+                and a maximum of{' '}
+                <code className="font-semibold">{MAX_FILE_PAGES}</code> pages
+              </span>
+            )}
+            .
           </InputMessage>
         </div>
         <Input
