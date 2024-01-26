@@ -26,6 +26,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Disable env validation
 ENV SKIP_ENV_VALIDATION 1
 
+ARG BASE_URL
+
 RUN npm run postinstall
 RUN npm run build
 

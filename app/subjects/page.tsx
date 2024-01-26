@@ -11,11 +11,15 @@ import { SubjectListSkeleton } from '~/components/subject/subject-list-skeleton'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 
+export const metadata = {
+  title: 'Subjects',
+};
+
 export default function SubjectsPage() {
   return (
     <Container>
       <Header title="Subjects" description="Collection of existing subjects">
-        <Button asChild size="icon" className="h-12 w-12">
+        <Button asChild size="icon" className="size-12">
           <Link href="/subjects/new">
             <Icons.Plus />
             <span className="sr-only">Create new subject</span>

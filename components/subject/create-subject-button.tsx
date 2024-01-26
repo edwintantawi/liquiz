@@ -9,7 +9,7 @@ export function CreateSubjectButton() {
     <Button
       asChild
       variant="ghost"
-      className="flex h-full w-full border-spacing-2 flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed px-3 py-8 font-normal text-slate-400 hover:ring-2 hover:ring-ring hover:ring-offset-2"
+      className="flex size-full border-spacing-2 flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed px-3 py-8 font-normal text-slate-400 hover:ring-2 hover:ring-ring hover:ring-offset-2"
     >
       <Link href="/subjects/new">
         <Icons.AddSubject size={30} strokeWidth={1.5} />

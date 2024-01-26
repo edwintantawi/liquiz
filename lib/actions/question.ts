@@ -2,10 +2,14 @@
 
 import { redirect } from 'next/navigation';
 
+import { HistoryStatus } from '@prisma/client';
+
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
+import { historySummaryQueue } from '~/lib/queue';
 import { submitQuestionAnswerSchema } from '~/lib/schema/question';
 import { ServerAction } from '~/lib/types/action';
+import { HistorySummaryMessage } from '~/lib/types/history';
 
 export const submitQuestionAnswer: ServerAction<
   typeof submitQuestionAnswerSchema
@@ -45,52 +49,112 @@ export const submitQuestionAnswer: ServerAction<
     };
   }
 
-  const questions = await database.question.findMany({
-    where: {
-      topicId: validatedForm.data.topic,
-      topic: { subject: { userId: session.user.id } },
-    },
-    include: { options: true },
-  });
+  let historyId;
+  try {
+    const topic = await database.topic.findUnique({
+      select: { title: true },
+      where: { id: validatedForm.data.topic },
+    });
 
-  if (validatedForm.data.answers.length !== questions.length) {
+    if (topic === null) {
+      return {
+        validationErrors: null,
+        error: 'Topic not found',
+        message: null,
+      };
+    }
+
+    const questions = await database.question.findMany({
+      where: {
+        topicId: validatedForm.data.topic,
+        topic: { subject: { userId: session.user.id } },
+      },
+      include: { options: true },
+    });
+
+    if (validatedForm.data.answers.length !== questions.length) {
+      return {
+        validationErrors: null,
+        error: 'Please answer all questions',
+        message: null,
+      };
+    }
+
+    let numberOfCorrectQuestion = 0;
+    for (const question of questions) {
+      const answer = validatedForm.data.answers.find(
+        (answer) => answer.question === question.id
+      );
+
+      if (!answer) continue;
+
+      const correctOptionId = question.options.find(
+        (option) => option.isCorrect
+      )?.id;
+      if (answer.option === correctOptionId) {
+        numberOfCorrectQuestion++;
+      }
+    }
+
+    const history = await database.history.create({
+      select: { id: true },
+      data: {
+        topicId: validatedForm.data.topic,
+        score: numberOfCorrectQuestion,
+        status: HistoryStatus.PENDING,
+        choices: {
+          createMany: {
+            data: validatedForm.data.answers.map((answer) => ({
+              questionId: answer.question,
+              optionId: answer.option,
+            })),
+          },
+        },
+      },
+    });
+
+    const message: HistorySummaryMessage = {
+      topic: {
+        title: topic.title,
+      },
+      history: {
+        id: history.id,
+      },
+      questions: questions.map((question) => {
+        return {
+          id: question.id,
+          statement: question.statement,
+          options: question.options.map((option) => {
+            const answer = validatedForm.data.answers.find(
+              (answer) => answer.question === question.id
+            )!;
+            return {
+              id: option.id,
+              statement: option.statement,
+              description: option.description,
+              isCorrect: option.isCorrect,
+              isChosen: option.id === answer.option,
+            };
+          }),
+        };
+      }),
+    };
+
+    try {
+      await historySummaryQueue.publish(message);
+      historyId = history.id;
+    } catch (error) {
+      await database.history.delete({ where: { id: history.id } });
+      throw error;
+    }
+  } catch (error) {
+    console.error(error);
     return {
       validationErrors: null,
-      error: 'Please answer all questions',
+      error: 'Failed to submit answers',
       message: null,
     };
   }
 
-  let numberOfCorrectQuestion = 0;
-  for (const question of questions) {
-    const answer = validatedForm.data.answers.find(
-      (answer) => answer.question === question.id
-    );
-
-    if (!answer) continue;
-
-    const correctOptionId = question.options.find((option) => option.isCorrect)
-      ?.id;
-    if (answer.option === correctOptionId) {
-      numberOfCorrectQuestion++;
-    }
-  }
-
-  const history = await database.history.create({
-    select: { id: true },
-    data: {
-      topicId: validatedForm.data.topic,
-      score: numberOfCorrectQuestion,
-      choices: {
-        createMany: {
-          data: validatedForm.data.answers.map((answer) => ({
-            questionId: answer.question,
-            optionId: answer.option,
-          })),
-        },
-      },
-    },
-  });
-
-  redirect(`/topics/${validatedForm.data.topic}/histories/${history.id}`);
+  redirect(`/topics/${validatedForm.data.topic}/histories/${historyId}`);
 };

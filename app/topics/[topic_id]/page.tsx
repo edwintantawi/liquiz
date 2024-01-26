@@ -1,22 +1,29 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { TopicDetailProviders } from '~/app/topics/[topic_id]/providers';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
+import { RetrievalTime } from '~/components/retrieval-time';
 import { TopicDeleteButton } from '~/components/topic/topic-delete-button';
 import { TopicQuestionForm } from '~/components/topic/topic-question-form';
+import { TopicQuestionReveal } from '~/components/topic/topic-question-reveal';
 import { Button } from '~/components/ui/button';
 import { getQuestionsByTopicId } from '~/lib/queries/question';
 import { getTopicById } from '~/lib/queries/topic';
 
+export const metadata = {
+  title: 'Topic Detail',
+};
+
 interface TopicDetailPageProps {
   params: { topic_id: string };
+  searchParams: { reveal?: string };
 }
 
 export default async function TopicDetailPage({
   params,
+  searchParams,
 }: TopicDetailPageProps) {
   const topic = await getTopicById(params.topic_id);
   const questions = await getQuestionsByTopicId(params.topic_id);
@@ -54,14 +61,18 @@ export default async function TopicDetailPage({
         <TopicDeleteButton topicId={topic.id} />
       </DetailHeader>
 
-      <TopicDetailProviders>
+      <RetrievalTime targetId={params.topic_id} />
+
+      {searchParams.reveal ? (
+        <TopicQuestionReveal questions={questions} />
+      ) : (
         <TopicQuestionForm
           topicId={topic.id}
           subjectId={topic.subject.id}
           totalQuestions={topic.numberOfQuestions}
           questions={questions}
         />
-      </TopicDetailProviders>
+      )}
     </Container>
   );
 }

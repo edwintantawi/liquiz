@@ -44,6 +44,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at")
   accounts      Account[]
   sessions      Session[]
   subjects      Subject[]
@@ -67,7 +69,7 @@ model Subject {
   description String     @db.VarChar(100)
   file        String     @map("file")
   createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   documents   Document[]
   topics      Topic[]
@@ -86,14 +88,21 @@ model Document {
   @@map("documents")
 }
 
+enum TopicStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
 model Topic {
-  id                String     @id @default(uuid())
-  subjectId         String     @map("subject_id")
-  title             String     @db.VarChar(64)
-  numberOfQuestions Int        @map("number_of_questions")
-  subject           Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt         DateTime   @default(now()) @map("created_at")
-  updatedAt         DateTime   @updatedAt @map("updated_at")
+  id                String      @id @default(uuid())
+  subjectId         String      @map("subject_id")
+  title             String      @db.VarChar(64)
+  numberOfQuestions Int         @map("number_of_questions")
+  status            TopicStatus @default(NONE)
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @default(now()) @updatedAt @map("updated_at")
+  subject           Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   questions         Question[]
   histories         History[]
 
@@ -104,6 +113,8 @@ model Question {
   id        String   @id @default(uuid())
   topicId   String   @map("topic_id")
   statement String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   options   Option[]
   choices   Choice[]
@@ -117,6 +128,8 @@ model Option {
   statement   String
   description String
   isCorrect   Boolean  @map("is_correct")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
   question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   choices     Choice[]
 
@@ -128,6 +141,8 @@ model Choice {
   historyId  String   @map("history_id")
   questionId String   @map("question_id")
   optionId   String   @map("option_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
   history    History  @relation(fields: [historyId], references: [id], onDelete: Cascade)
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   option     Option   @relation(fields: [optionId], references: [id], onDelete: Cascade)
@@ -135,13 +150,40 @@ model Choice {
   @@map("choices")
 }
 
+enum HistoryStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
 model History {
-  id        String   @id @default(uuid())
-  topicId   String   @map("topic_id")
-  score     Int
-  createdAt DateTime @default(now()) @map("created_at")
-  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  choices   Choice[]
+  id          String        @id @default(uuid())
+  topicId     String        @map("topic_id")
+  score       Int
+  feedbacks   String[]
+  suggestions String[]
+  status      HistoryStatus @default(NONE)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at")
+  topic       Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  choices     Choice[]
 
   @@map("histories")
+}
+
+enum RetrievalTimeType {
+  TOPIC
+  HISTORY
+  SUBJECT
+}
+
+model RetrievalTime {
+  id        String            @id @default(uuid())
+  targetId  String            @map("target_id")
+  type      RetrievalTimeType
+  duration  Int
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  @@map("retrieval_times")
 }

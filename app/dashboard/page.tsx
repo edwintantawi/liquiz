@@ -16,16 +16,13 @@ import { TopicCount, TopicCountSkeleton } from '~/components/topic/topic-count';
 import { TopicLatestList } from '~/components/topic/topic-latest-list';
 import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { auth } from '~/lib/auth';
-import { getInitialName } from '~/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Dashboard',
-  description: 'Manage all your subjects and topics easily',
 };
 
 export default async function DashboardPage() {
@@ -35,47 +32,43 @@ export default async function DashboardPage() {
 
   return (
     <Container>
-      <header>
-        <h1 className="sr-only">LiQuiz Dashboard</h1>
-      </header>
       <div className="space-y-6">
         <div className="space-y-2">
-          <div className="grid grid-cols-[auto,1fr] items-center gap-3 rounded-md border px-4 py-3">
-            <Avatar className="border">
-              <AvatarImage src={session.user.image ?? ''} alt="" />
-              <AvatarFallback>
-                {getInitialName(session.user.name ?? '')}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h2 className="font-semibold">{session?.user?.name}</h2>
-              <span className="rounded-full border bg-muted px-3 py-1 text-xs text-muted-foreground">
-                {session.user.email}
-              </span>
+          <header className="rounded-md border bg-gradient-to-tr from-slate-50/50 to-slate-100">
+            <div className="flex flex-col justify-center px-4 py-6 sm:p-8">
+              <h1 className="text-sm font-semibold text-muted-foreground">
+                Welcome to LiQuiz ✨ ,
+              </h1>
+              <p className="text-xl font-bold">{session.user.name}</p>
+              <p className="text-sm text-muted-foreground">
+                what do you want to start practicing today?
+              </p>
             </div>
+          </header>
+
+          <div className="space-y-2">
+            <ErrorBoundary
+              fallback={
+                <Alert variant="destructive">
+                  <Icons.Error size={20} />
+                  <AlertTitle>Something went wrong</AlertTitle>
+                  <AlertDescription>
+                    Failed to request your subjects and topics count
+                  </AlertDescription>
+                </Alert>
+              }
+            >
+              <div className="grid grid-cols-2 gap-2">
+                <React.Suspense fallback={<SubjectCountSkeleton />}>
+                  <SubjectCount />
+                </React.Suspense>
+
+                <React.Suspense fallback={<TopicCountSkeleton />}>
+                  <TopicCount />
+                </React.Suspense>
+              </div>
+            </ErrorBoundary>
           </div>
-
-          <ErrorBoundary
-            fallback={
-              <Alert variant="destructive">
-                <Icons.Error size={20} />
-                <AlertTitle>Something went wrong</AlertTitle>
-                <AlertDescription>
-                  Failed to request your subjects and topics count
-                </AlertDescription>
-              </Alert>
-            }
-          >
-            <div className="grid grid-cols-2 gap-2">
-              <React.Suspense fallback={<SubjectCountSkeleton />}>
-                <SubjectCount />
-              </React.Suspense>
-
-              <React.Suspense fallback={<TopicCountSkeleton />}>
-                <TopicCount />
-              </React.Suspense>
-            </div>
-          </ErrorBoundary>
         </div>
 
         <Section

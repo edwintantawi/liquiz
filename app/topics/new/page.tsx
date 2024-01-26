@@ -1,8 +1,12 @@
 import { Container } from '~/components/container';
 import { Header } from '~/components/header';
 import { CreateTopicForm } from '~/components/topic/create-topic-form';
-import { getMaxNumberOfQuestionsBySubjectId } from '~/lib/actions/document';
+import { getMaxNumberOfQuestionsBySubjectId } from '~/lib/queries/document';
 import { getAllSubjects } from '~/lib/queries/subject';
+
+export const metadata = {
+  title: 'Create Topic',
+};
 
 interface CreateTopicPageProps {
   searchParams: { subject_id?: string };

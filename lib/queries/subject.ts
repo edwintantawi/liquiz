@@ -30,7 +30,7 @@ export async function getLatestSubjects({
   }
 
   const subjects = await database.subject.findMany({
-    where: { userId: session.user?.id },
+    where: { userId: session.user.id },
     include: { _count: { select: { topics: true } } },
     orderBy: { createdAt: 'desc' },
     take: limit,

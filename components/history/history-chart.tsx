@@ -6,7 +6,12 @@ import { Datum, Point, ResponsiveLine } from '@nivo/line';
 
 import { Skeleton } from '~/components/ui/skeleton';
 import { History } from '~/lib/types/history';
-import { cn, scoreToPercentage, tailwindCssColorToHex } from '~/lib/utils';
+import {
+  cn,
+  formatLongDate,
+  scoreToPercentage,
+  tailwindCssColorToHex,
+} from '~/lib/utils';
 
 interface HistoryChartProps {
   histories: History[];
@@ -39,7 +44,7 @@ export function HistoryChart({
         />
       ) : (
         <div className="h-full pb-3">
-          <Skeleton className="grid h-full w-full place-items-center border border-dashed p-8">
+          <Skeleton className="grid size-full place-items-center border border-dashed p-8">
             <p className="text-balance text-center text-xs text-muted-foreground">
               Cannot display the graph because the data is not sufficient, to
               display the graph requires 2 or more histories
@@ -101,16 +106,7 @@ function Chart({
       ]}
       fill={[{ id: 'gradientA', match: '*' }]}
       margin={{ bottom: 30, left: 16, right: 16, top: 30 }}
-      xFormat={(value) =>
-        new Date(value).toLocaleDateString('en-US', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })
-      }
+      xFormat={(value) => formatLongDate(value)}
       tooltip={({ point }) => (
         <ChartTooltip
           point={point}
@@ -135,18 +131,12 @@ function ChartTooltip({
 
   if (!pointData) return null;
 
-  const formatedDate = new Date(pointData.x!).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const formatedDate = formatLongDate(pointData.x!);
 
   return (
     <div
       className={cn(
-        'absolute top-2 w-48 rounded-sm border bg-white px-2 py-1 text-xs',
+        'absolute top-2 w-52 rounded-sm border bg-white px-2 py-1 text-xs',
         {
           '-left-4': point.index < data.length / 2,
           '-right-4': point.index >= data.length / 2,

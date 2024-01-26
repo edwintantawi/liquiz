@@ -83,3 +83,24 @@ export function scoreToPercentage({
 }) {
   return Math.round((score / total) * 100);
 }
+
+export function formatRetrievalTime(durationInMs: number) {
+  const min = Math.floor((durationInMs / 1000 / 60) << 0);
+  const sec = Math.floor((durationInMs / 1000) % 60);
+
+  return `${String(min).padStart(2, '0')} min ${String(sec).padStart(
+    2,
+    '0'
+  )} sec`;
+}
+
+export function formatLongDate(date: Date | string | number) {
+  return new Date(date).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}

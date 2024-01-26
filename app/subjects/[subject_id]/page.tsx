@@ -7,6 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
 import { Icons } from '~/components/icons';
+import { RetrievalTime } from '~/components/retrieval-time';
 import { Section } from '~/components/section';
 import { SubjectDeleteButton } from '~/components/subject/subject-delete-button';
 import { TopicListSkeleton } from '~/components/topic/topic-list-skeleton';
@@ -14,6 +15,10 @@ import { TopicSubjectList } from '~/components/topic/topic-subject-list';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
 import { getSubjectById } from '~/lib/queries/subject';
+
+export const metadata = {
+  title: 'Subject Detail',
+};
 
 interface SubjectDetailPageProps {
   params: { subject_id: string };
@@ -67,6 +72,8 @@ export default async function SubjectDetailPage({
 
         <SubjectDeleteButton subjectId={subject.id} />
       </DetailHeader>
+
+      <RetrievalTime targetId={subject.id} />
 
       <div className="p-3">
         <Section

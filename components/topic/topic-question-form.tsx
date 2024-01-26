@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useFormState } from 'react-dom';
 import Link from 'next/link';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Icons } from '~/components/icons';
 import { Question, QuestionListSkeleton } from '~/components/question';
@@ -36,6 +36,7 @@ export function TopicQuestionForm({
   totalQuestions,
   questions,
 }: TopicQuestionFormProps) {
+  const queryClient = useQueryClient();
   const [state, formAction] = useFormState(submitQuestionAnswer, initialState);
   const [numberOfAvailableQuestions, setNumberOfAvailableQuestions] =
     React.useState<number>(questions.length);
@@ -57,6 +58,10 @@ export function TopicQuestionForm({
     initialData: questions,
     refetchInterval: 10_000,
   });
+
+  React.useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['retrieval-time', topicId] });
+  }, [queryClient, topicId, numberOfAvailableQuestions]);
 
   return (
     <form action={formAction} className="px-3 py-4">

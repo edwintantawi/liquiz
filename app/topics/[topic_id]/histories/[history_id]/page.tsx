@@ -1,13 +1,20 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { HistoryStatus } from '@prisma/client';
+
 import { Container } from '~/components/container';
 import { DetailHeader } from '~/components/detail-header';
+import { HistorySummary } from '~/components/history/history-summary';
 import { Icons } from '~/components/icons';
 import { Question } from '~/components/question';
 import { Button } from '~/components/ui/button';
 import { getHistoryById } from '~/lib/queries/history';
 import { cn } from '~/lib/utils';
+
+export const metadata = {
+  title: 'Topic History',
+};
 
 interface HistoryDetailPageProps {
   params: { topic_id: string; history_id: string };
@@ -22,6 +29,8 @@ export default async function HistoryDetailPage({
   });
 
   if (history === null) notFound();
+
+  const hasSummary = history.summary.status !== HistoryStatus.NONE;
 
   return (
     <Container className="p-0">
@@ -96,6 +105,14 @@ export default async function HistoryDetailPage({
             </li>
           ))}
         </ul>
+
+        {hasSummary && (
+          <HistorySummary
+            historyId={history.id}
+            summary={history.summary}
+            color={history.topic.subject.color}
+          />
+        )}
 
         <div className="mt-12 flex items-center justify-between gap-2">
           <Button asChild variant="outline" className="w-full">

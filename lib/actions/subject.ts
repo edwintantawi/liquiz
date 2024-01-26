@@ -2,6 +2,8 @@
 
 import { redirect } from 'next/navigation';
 
+import { RetrievalTimeType } from '@prisma/client';
+
 import { auth } from '~/lib/auth';
 import { database } from '~/lib/database';
 import { loadPdfDocument } from '~/lib/langchain/document-loader';
@@ -21,7 +23,7 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   _,
   formData
 ) => {
-  const validatedForm = createSubjectSchema.safeParse(
+  const validatedForm = await createSubjectSchema.safeParseAsync(
     Object.fromEntries(formData)
   );
   if (!validatedForm.success) {
@@ -44,10 +46,11 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
   let subjectId;
   let fileStorageId;
   try {
+    fileStorageId = await subjectFileStorage.store(validatedForm.data.document);
+
+    const t0 = performance.now();
     const docs = await loadPdfDocument(validatedForm.data.document);
     const chunks = await splitter.splitDocuments(docs);
-
-    fileStorageId = await subjectFileStorage.store(validatedForm.data.document);
 
     const { id } = await database.subject.create({
       select: { id: true },
@@ -79,6 +82,16 @@ export const createSubject: ServerAction<typeof createSubjectSchema> = async (
       await database.subject.delete({ where: { id } });
       throw error;
     }
+
+    const t1 = performance.now();
+    const retrievalTime = t1 - t0;
+    await database.retrievalTime.create({
+      data: {
+        type: RetrievalTimeType.SUBJECT,
+        targetId: subjectId,
+        duration: retrievalTime,
+      },
+    });
   } catch (error) {
     await subjectFileStorage.delete(fileStorageId);
 

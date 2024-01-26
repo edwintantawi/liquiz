@@ -9,11 +9,15 @@ import { Button } from '~/components/ui/button';
 interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
-export function SubmitButton({ children, ...props }: SubmitButtonProps) {
+export function SubmitButton({
+  children,
+  disabled,
+  ...props
+}: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} {...props}>
+    <Button type="submit" disabled={pending || disabled} {...props}>
       {pending && <Icons.Loader size={20} className="animate-spin" />}
       {children}
     </Button>

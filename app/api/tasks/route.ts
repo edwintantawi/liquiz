@@ -1,6 +1,7 @@
+import { PromptTemplate } from '@langchain/core/prompts';
+import { RetrievalTimeType, TopicStatus } from '@prisma/client';
 import { LLMChain } from 'langchain/chains';
 import { OutputFixingParser } from 'langchain/output_parsers';
-import { PromptTemplate } from 'langchain/prompts';
 import { z } from 'zod';
 
 import { database } from '~/lib/database';
@@ -8,6 +9,7 @@ import { env } from '~/lib/env.mjs';
 import { createLLM } from '~/lib/langchain/llm';
 import { outputParser } from '~/lib/langchain/output-parser';
 import { createQuestionsPrompt } from '~/lib/langchain/prompt-template';
+import { tasksQueue } from '~/lib/queue';
 import { TopicMessage } from '~/lib/types/topic';
 
 type Question = z.infer<typeof outputParser.schema>[number];
@@ -26,11 +28,22 @@ export async function POST(request: Request) {
   }
 
   try {
+    const t0 = performance.now();
+
     const llm = createLLM();
     const body = await request.json();
     const payload = JSON.parse(
       Buffer.from(body.message.data, 'base64').toString()
     ) as TopicMessage;
+
+    const topic = await database.topic.findUnique({
+      select: { numberOfQuestions: true },
+      where: { id: payload.topic.id },
+    });
+    if (topic === null) {
+      return new Response(undefined, { status: 200 });
+    }
+    const numberOfTotalTopicQuestions = topic.numberOfQuestions;
 
     const outputFixingParser = OutputFixingParser.fromLLM(llm, outputParser);
     const prompt = new PromptTemplate({
@@ -74,6 +87,44 @@ export async function POST(request: Request) {
     });
 
     await database.$transaction(questionsPromises);
+
+    const latestNumberOfQuestions = await database.question.count({
+      where: { topicId: payload.topic.id },
+    });
+
+    if (latestNumberOfQuestions === numberOfTotalTopicQuestions) {
+      await database.topic.update({
+        where: { id: payload.topic.id },
+        data: { status: TopicStatus.COMPLETED },
+      });
+    }
+
+    const t1 = performance.now();
+    const retrievalTime = t1 - t0;
+    await database.retrievalTime.create({
+      data: {
+        type: RetrievalTimeType.TOPIC,
+        targetId: payload.topic.id,
+        duration: retrievalTime,
+      },
+    });
+
+    const isNumberOfQuestionsNotFulfilled =
+      questions.length < payload.topic.numberOfQuestions;
+    if (isNumberOfQuestionsNotFulfilled) {
+      const remainingNumberOfQuestions =
+        payload.topic.numberOfQuestions - questions.length;
+      const message: TopicMessage = {
+        topic: {
+          id: payload.topic.id,
+          title: payload.topic.title,
+          numberOfQuestions: remainingNumberOfQuestions,
+        },
+        contexts: payload.contexts,
+        subject: payload.subject,
+      };
+      await tasksQueue.publish(message);
+    }
 
     return new Response(undefined, { status: 200 });
   } catch (error) {

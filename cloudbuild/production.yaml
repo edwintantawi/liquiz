@@ -1,11 +1,11 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: gcr.io/cloud-builders/docker
+    secretEnv: ['BASE_URL']
+    entrypoint: bash
     args:
       [
-        'build',
-        '-t',
-        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA',
-        '.',
+        '-c',
+        'docker build --build-arg="BASE_URL=$$BASE_URL" -t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA .',
       ]
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -37,6 +37,10 @@ steps:
       - '--timeout'
       - '600'
       - '--set-secrets'
+      - 'BASE_URL=liquiz-production-base-url:latest'
+      - '--set-secrets'
+      - 'MAX_NUMBER_OF_QUESTIONS=liquiz-production-max-number-of-questions:latest'
+      - '--set-secrets'
       - 'DATABASE_URL=liquiz-production-database-url:latest'
       - '--set-secrets'
       - 'DIRECT_URL=liquiz-production-direct-url:latest'
@@ -55,10 +59,16 @@ steps:
       - '--set-secrets'
       - 'GCP_SUBJECT_FILE_BUCKET_NAME=liquiz-production-gcp-subject-file-bucket-name:latest'
       - '--set-secrets'
+      - 'GCP_PUBSUB_VERIFICATION_TOKEN=liquiz-production-gcp-pubsub-verification-token:latest'
+      - '--set-secrets'
       - 'GCP_PUBSUB_TOPIC_NAME=liquiz-production-gcp-pubsub-topic-name:latest'
       - '--set-secrets'
-      - 'GCP_PUBSUB_VERIFICATION_TOKEN=liquiz-production-gcp-pubsub-verification-token:latest'
+      - 'GCP_PUBSUB_HISTORY_SUMMARY_TOPIC_NAME=liquiz-production-gcp-pubsub-history-summary-topic-name:latest'
 images:
   - 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-production:$COMMIT_SHA'
 options:
   logging: CLOUD_LOGGING_ONLY
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/liquiz-production-base-url/versions/latest
+      env: 'BASE_URL'

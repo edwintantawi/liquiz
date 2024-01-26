@@ -1,3 +1,5 @@
+import { HistoryStatus } from '@prisma/client';
+
 export interface History {
   id: string;
   score: number;
@@ -31,4 +33,31 @@ export interface HistoryDetail extends History {
       optionId: string;
     };
   }[];
+  summary: HistorySummary;
+}
+
+export interface HistorySummaryMessage {
+  history: {
+    id: string;
+  };
+  topic: {
+    title: string;
+  };
+  questions: {
+    id: string;
+    statement: string;
+    options: {
+      id: string;
+      statement: string;
+      description: string;
+      isCorrect: boolean;
+      isChosen: boolean;
+    }[];
+  }[];
+}
+
+export interface HistorySummary {
+  status: HistoryStatus;
+  feedbacks: string[];
+  suggestions: string[];
 }

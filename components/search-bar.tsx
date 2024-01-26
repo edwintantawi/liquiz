@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
@@ -10,6 +10,7 @@ import { cn } from '~/lib/utils';
 
 export function SearchBar() {
   const router = useRouter();
+  const pathName = usePathname();
   const searchParams = useSearchParams();
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -44,7 +45,10 @@ export function SearchBar() {
     setQuery(event.currentTarget.value);
   };
 
-  const handleClearSearch = () => setQuery('');
+  const handleClearSearch = () => {
+    setQuery('');
+    router.push(searchParams.get('back') ?? '/');
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,7 +58,7 @@ export function SearchBar() {
     inputRef.current?.blur();
 
     startTransition(() => {
-      router.push(`/search?q=${query}`);
+      router.push(`/search?q=${query}&back=${pathName}`);
     });
   };
 
@@ -90,7 +94,7 @@ export function SearchBar() {
             <Button
               type="reset"
               variant="secondary"
-              className="h-7 w-7 border p-1"
+              className="size-7 border p-1"
               onClick={handleClearSearch}
             >
               <Icons.Cancel size={16} />
