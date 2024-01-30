@@ -14,7 +14,7 @@ export async function GET(
   const result = await database.retrievalTime.findFirst({
     select: { duration: true },
     where: { targetId: context.params.target_id },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { duration: 'desc' },
   });
 
   if (result === null) return Response.json({ duration: null });
