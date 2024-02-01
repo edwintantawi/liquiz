@@ -54,7 +54,7 @@ export default async function TopicDetailPage({
         <Button asChild className="w-full border border-white">
           <Link href={`/topics/${topic.id}/histories`}>
             <Icons.History size={20} className="shrink-0" />
-            <span>Histories</span>
+            <span>History</span>
           </Link>
         </Button>
 
