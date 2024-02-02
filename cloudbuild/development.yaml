@@ -6,10 +6,10 @@ steps:
       [
         '-c',
         'docker build',
-        '--build-arg="BASE_URL=$$BASE_URL"'
-        '--build-arg="NEXT_PUBLIC_MAX_FILE_SIZE=$$NEXT_PUBLIC_MAX_FILE_SIZE"'
-        '--build-arg="NEXT_PUBLIC_MAX_NUMBER_OF_QUESTIONS=$$NEXT_PUBLIC_MAX_NUMBER_OF_QUESTIONS"'
-        '--build-arg="NEXT_PUBLIC_MAX_NUMBER_OF_PAGES=$$NEXT_PUBLIC_MAX_NUMBER_OF_PAGES"'
+        '--build-arg="BASE_URL=$$BASE_URL"',
+        '--build-arg="NEXT_PUBLIC_MAX_FILE_SIZE=$$NEXT_PUBLIC_MAX_FILE_SIZE"',
+        '--build-arg="NEXT_PUBLIC_MAX_NUMBER_OF_QUESTIONS=$$NEXT_PUBLIC_MAX_NUMBER_OF_QUESTIONS"',
+        '--build-arg="NEXT_PUBLIC_MAX_NUMBER_OF_PAGES=$$NEXT_PUBLIC_MAX_NUMBER_OF_PAGES"',
         '-t asia-southeast2-docker.pkg.dev/$PROJECT_ID/liquiz/liquiz-dev:$COMMIT_SHA .',
       ]
   - name: 'gcr.io/cloud-builders/docker'
