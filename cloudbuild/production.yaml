@@ -1,6 +1,12 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    secretEnv: ['BASE_URL']
+    secretEnv:
+      [
+        'BASE_URL',
+        'NEXT_PUBLIC_MAX_FILE_SIZE',
+        'NEXT_PUBLIC_MAX_NUMBER_OF_QUESTIONS',
+        'NEXT_PUBLIC_MAX_NUMBER_OF_PAGES',
+      ]
     entrypoint: bash
     args:
       [
